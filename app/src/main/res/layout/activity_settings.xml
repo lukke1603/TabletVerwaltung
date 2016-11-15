@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_etUrl"
+            android:theme="@style/etLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etUrl"
+                android:textColor="@color/white200"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:hint="@string/etUrl"
+                android:inputType="textUri"
+                android:textSize="20sp"
+                android:textIsSelectable="false" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_etBenutzer"
+            android:theme="@style/etLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etBenutzer"
+                android:textColor="@color/white200"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:textSize="20sp"
+                android:hint="@string/etBenutzer" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_etPasswort"
+            android:theme="@style/etLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etPasswort"
+                android:textColor="@color/white200"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:textSize="20sp"
+                android:hint="@string/etPasswort"
+                android:inputType="textVisiblePassword" />
+        </android.support.design.widget.TextInputLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="leila.tabletverwaltung"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://schemas.android.com/apk/res/android
-http://schemas.android.com/apk/res/android ">
+    xsi:schemaLocation="http://schemas.android.com/apk/res/android">
 
     <meta-data
         android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -32,9 +31,11 @@ http://schemas.android.com/apk/res/android ">
         <activity
             android:name=".ReaderActivity"
             android:label="@string/tvEinlesen"
-            android:parentActivityName=".MainActivity">
-
-        </activity>
+            android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/tvEinstellungen"
+            android:parentActivityName=".MainActivity"></activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data

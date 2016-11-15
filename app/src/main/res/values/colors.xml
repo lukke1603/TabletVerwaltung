@@ -8,6 +8,7 @@
     <color name="buttons">#3b3b3b</color>
     <color name="buttonTextColor">#c8ffffff</color>
     <color name="white200">#c8ffffff</color>
+    <color name="white50">#77ffffff</color>
     <color name="backgroundColor">#00a2ff</color>
 
 </resources>

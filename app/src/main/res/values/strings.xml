@@ -4,4 +4,12 @@
     <string name="tvGeraete">Geräteübersicht</string>
     <string name="tvEinstellungen">Einstellungen</string>
     <string name="tvLehrer">Lehrkraft</string>
+    <string name="tvEinstellungenSpeichern">Speichern</string>
+    <string name="alertEinstellungenSpeichernTitle">Änderungen speichern?</string>
+    <string name="alertEinstellungenSpeichernMessage">Möchten Sie Ihre Änderungen speichern?</string>
+    <string name="alertEinstellungenSpeichernNegativeButton">Nein</string>
+    <string name="alertEinstellungenSpeichernPositiveButton">Ja</string>
+    <string name="etUrl">Url zur Datenbank</string>
+    <string name="etBenutzer">Benutzer</string>
+    <string name="etPasswort">Passwort</string>
 </resources>
