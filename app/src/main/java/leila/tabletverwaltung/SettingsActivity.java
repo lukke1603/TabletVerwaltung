@@ -80,10 +80,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void validateChanges() {
-//        Log.i("Benutzer", this.etBenutzer.getText().toString());
-//        Log.i("URL", this.etUrl.getText().toString());
-//        Log.i("Passwort", this.etPasswort.getText().toString());
-//        Log.i("OLD", this.spOld.toString());
 
         if(!this.etBenutzer.getText().toString().equals(this.spOld.get(SP_BENUTZER).toString()) ||
                 !this.etPasswort.getText().toString().equals(this.spOld.get(SP_PASSWORT).toString()) ||
