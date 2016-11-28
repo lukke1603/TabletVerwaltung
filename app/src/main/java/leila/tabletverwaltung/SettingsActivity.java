@@ -74,7 +74,6 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         }else if (id == R.id.einstellungenSpeichern) {
             saveSettings();
-            DbConnection.GetInstance().close();
             NavUtils.navigateUpTo(this, NavUtils.getParentActivityIntent(this));
             return true;
         }
@@ -98,21 +97,18 @@ public class SettingsActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveSettings();
-                            DbConnection.GetInstance().close();
                             NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setNegativeButton(R.string.alertEinstellungenSpeichernNegativeButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            DbConnection.GetInstance().close();
                             NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }else{
-            DbConnection.GetInstance().close();
             NavUtils.navigateUpTo(this, upIntent);
         }
     }
@@ -136,5 +132,9 @@ public class SettingsActivity extends AppCompatActivity {
         this.etPasswort.setText(this.sp.getString(SP_PASSWORT, null));
     }
 
-
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        DbConnection.GetInstance().close();
+//    }
 }

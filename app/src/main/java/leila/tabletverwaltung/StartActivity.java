@@ -1,5 +1,7 @@
 package leila.tabletverwaltung;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -11,6 +13,7 @@ import android.util.Log;
 import java.sql.ResultSet;
 
 import leila.tabletverwaltung.DataConnection.DbConnection;
+import leila.tabletverwaltung.DataConnection.DbConnector;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -28,89 +31,68 @@ public class StartActivity extends AppCompatActivity {
 
         Log.i("ACTIVITY", "StartActivity");
 
+        new Start(this, getApplicationContext(), getBaseContext()).execute();
+    }
+}
 
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String url = sp.getString(SettingsActivity.SP_URL, null);
-                String benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
-                String passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
+class Start extends AsyncTask{
+    private Intent i;
+    private Context baseContext;
+    private Context context;
+    private Activity activity;
 
-                Log.i("URL", url);
-                Log.i("BENUTZER", benutzer);
-                Log.i("PASSWORT", passwort);
+    public Start(Activity activity, Context context, Context baseContext){
+        this.context = context;
+        this.baseContext = baseContext;
+        this.activity = activity;
+    }
 
-                Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
-                if(url != null && benutzer != null && passwort != null) {
-                    try {
-                        DbConnection con = DbConnection.CreateInstance("jdbc:mysql://"+url+"/tabletverwaltung", benutzer, passwort);
-                        ResultSet rs = con.Select("SELECT 1 as `valid`");
-                        rs.first();
-                        Log.i("RESULT", Integer.toString(rs.getInt("valid")));
-                        if(rs.getInt("valid") == 1){
-                            i = new Intent(getApplicationContext(), MainActivity.class);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+    @Override
+    protected Object doInBackground(Object... params) {
+
+        Log.i("TEST", "here");
+
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(baseContext);
+        String url = sp.getString(SettingsActivity.SP_URL, null);
+        String benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
+        String passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
+//
+        Log.i("URL", url);
+        Log.i("BENUTZER", benutzer);
+        Log.i("PASSWORT", passwort);
+//
+        i = new Intent(context, SettingsActivity.class);
+        if(url != null && benutzer != null && passwort != null) {
+            DbConnector con = null;
+            try {
+                con = DbConnector.connect(url, benutzer, passwort);
+                Log.i("CONNECTION", con.toString());
+                ResultSet rs = con.Select("SELECT 1 as `valid`");
+                rs.first();
+                Log.i("RESULT", Integer.toString(rs.getInt("valid")));
+                if(rs.getInt("valid") == 1){
+                    i = new Intent(context, MainActivity.class);
                 }
 
-                startActivity(i);
-                return null;
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.i("EXCEPTION", "here");
+            }finally {
+                Log.i("STATE", "FINAL");
+                if(con != null){
+                    Log.i("STATE", "CLOSE");
+                    con.disconnect();
+                }
             }
+        }
 
-        }.execute();
+        return null;
+    }
 
-
-
-
-
-
-
-
-
-
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-//
-//        String url = sp.getString(SettingsActivity.SP_URL, null);
-//        String benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
-//        String passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
-//
-//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//
-//
-//        if(url != null && benutzer != null && passwort != null){
-//
-//            try{
-//                DbConnection con = DbConnection.CreateInstance("jdbc:mysql://"+url+"/tabletverwaltung", benutzer, passwort);
-//                con.Select("SELECT 1");
-//            }catch (Exception e){
-//                e.printStackTrace();
-//                intent = new Intent(getApplicationContext(), SettingsActivity.class);
-//            }
-
-
-
-
-
-//            try {
-//                if(!con.getmConnection().isValid(1)){
-//                    Toast.makeText(getApplicationContext(), R.string.toast_settings_datenbankverbindung_falsch, Toast.LENGTH_LONG);
-//                    intent = new Intent(getApplicationContext(), SettingsActivity.class);
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//                Toast.makeText(getApplicationContext(), R.string.toast_settings_datenbankverbindung_falsch, Toast.LENGTH_LONG);
-//                intent = new Intent(getApplicationContext(), SettingsActivity.class);
-//            }
-//        }else{
-//            intent = new Intent(getApplicationContext(), SettingsActivity.class);
-//        }
-
-
-
-//        startActivity(intent);
+    @Override
+    protected void onPostExecute(Object o) {
+        activity.startActivity(i);
 
     }
 }
