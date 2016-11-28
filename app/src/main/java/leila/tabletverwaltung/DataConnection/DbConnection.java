@@ -1,19 +1,27 @@
 package leila.tabletverwaltung.DataConnection;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.util.Log;
 
-import java.sql.Connection;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
+import leila.tabletverwaltung.SettingsActivity;
+
 
 /**
  * Created by a.moszczynski on 15.11.2016.
  */
 public class DbConnection {
     private Connection mConnection;
-    private  static DbConnection mInstance;
+    private static DbConnection mInstance;
 
     private static String mDataBaseName;
     private static String mUserName;
@@ -24,9 +32,18 @@ public class DbConnection {
         mUserName = userName;
         mPassWord = passWord;
 
-        try
-        {
-            mConnection = DriverManager.getConnection
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            DriverManager.setLoginTimeout(5);
+            mConnection = (Connection) DriverManager.getConnection
                     (mDataBaseName,mUserName,mPassWord);
         }catch (SQLException e){
             Log.e("SQL",e.getMessage());
@@ -40,6 +57,19 @@ public class DbConnection {
         return mInstance;
     }
 
+
+    public static DbConnection CreateInstance(Context context){
+        SharedPreferences sp = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+
+        Log.i("url", sp.getString(SettingsActivity.SP_URL, null));
+
+
+        if(mInstance == null)
+            mInstance = new DbConnection(sp.getString(SettingsActivity.SP_URL, null), sp.getString(SettingsActivity.SP_BENUTZER, null), sp.getString(SettingsActivity.SP_PASSWORT, null));
+        return mInstance;
+    }
+
+
     public static DbConnection GetInstance(){
         if(mInstance == null)
             mInstance = new DbConnection(mDataBaseName, mUserName,mPassWord);
@@ -49,7 +79,7 @@ public class DbConnection {
     public ResultSet Select(String query){
         ResultSet resultSet = null;
         try{
-            Statement statement = mConnection.createStatement();
+            Statement statement = (Statement) mConnection.createStatement();
             resultSet = statement.executeQuery(query);
         }catch (SQLException e){
             Log(e);
@@ -77,14 +107,34 @@ public class DbConnection {
     }
 
     private boolean ExecuteStatement (String sql) throws SQLException {
-        Statement statement = mConnection.createStatement();
+        Statement statement = (Statement)mConnection.createStatement();
         return statement.execute(sql);
     }
+
+
+    public void close(){
+        try {
+            if(this.mConnection != null){
+                this.mConnection.close();
+                this.mInstance = null;
+                this.mConnection = null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void Log(Exception e){
         Log.e("SQLException", e.getMessage());
     }
+
+    public Connection getmConnection() {
+        return mConnection;
+    }
 }
+
+
 
 
 

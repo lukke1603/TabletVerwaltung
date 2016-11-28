@@ -11,4 +11,7 @@
     <color name="white50">#77ffffff</color>
     <color name="backgroundColor">#00a2ff</color>
 
+    <color name="loadingSpinnerStart">@color/white200</color>
+    <color name="loadingSpinnerStop">#00ffffff</color>
+
 </resources>

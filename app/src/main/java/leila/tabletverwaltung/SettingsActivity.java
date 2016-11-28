@@ -2,8 +2,11 @@ package leila.tabletverwaltung;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +19,8 @@ import android.widget.EditText;
 
 import java.util.Map;
 
+import leila.tabletverwaltung.DataConnection.DbConnection;
+
 public class SettingsActivity extends AppCompatActivity {
 
     private EditText etUrl;
@@ -25,9 +30,9 @@ public class SettingsActivity extends AppCompatActivity {
     private static String DEFAULT_URL = "www.ihreDomain.de/tablets";
 
     private static String SP_PREFIX = "tabletverwaltung";
-    private static String SP_URL = SP_PREFIX+".url";
-    private static String SP_BENUTZER = SP_PREFIX+".benutzer";
-    private static String SP_PASSWORT = SP_PREFIX+".passwort";
+    public static String SP_URL = SP_PREFIX+".url";
+    public static String SP_BENUTZER = SP_PREFIX+".benutzer";
+    public static String SP_PASSWORT = SP_PREFIX+".passwort";
 
     private InputMethodManager imm;
 
@@ -43,7 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         this.imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        this.sp = this.getSharedPreferences(this.getPackageName(), Context.MODE_PRIVATE);
+        this.sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         initViews();
         saveSettings();
@@ -64,15 +69,13 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        Log.i("ID", Integer.toString(id));
-
-
         if(id == android.R.id.home){
             validateChanges();
             return true;
         }else if (id == R.id.einstellungenSpeichern) {
             saveSettings();
-            NavUtils.navigateUpFromSameTask(this);
+            DbConnection.GetInstance().close();
+            NavUtils.navigateUpTo(this, NavUtils.getParentActivityIntent(this));
             return true;
         }
 
@@ -80,12 +83,14 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void validateChanges() {
+        final Intent upIntent = NavUtils.getParentActivityIntent(this);
 
         if(!this.etBenutzer.getText().toString().equals(this.spOld.get(SP_BENUTZER).toString()) ||
                 !this.etPasswort.getText().toString().equals(this.spOld.get(SP_PASSWORT).toString()) ||
                 !this.etUrl.getText().toString().equals(this.spOld.get(SP_URL).toString())){
 
             this.imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
             new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog)
                     .setTitle(R.string.alertEinstellungenSpeichernTitle)
                     .setMessage(R.string.alertEinstellungenSpeichernMessage)
@@ -93,19 +98,22 @@ public class SettingsActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveSettings();
-                            NavUtils.navigateUpFromSameTask(SettingsActivity.this);
+                            DbConnection.GetInstance().close();
+                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setNegativeButton(R.string.alertEinstellungenSpeichernNegativeButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            NavUtils.navigateUpFromSameTask(SettingsActivity.this);
+                            DbConnection.GetInstance().close();
+                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }else{
-            NavUtils.navigateUpFromSameTask(SettingsActivity.this);
+            DbConnection.GetInstance().close();
+            NavUtils.navigateUpTo(this, upIntent);
         }
     }
 

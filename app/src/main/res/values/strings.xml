@@ -12,4 +12,9 @@
     <string name="etUrl">Url zur Datenbank</string>
     <string name="etBenutzer">Benutzer</string>
     <string name="etPasswort">Passwort</string>
+
+    <string name="toast_settings_datenbankverbindung_eintragen">Bitte tragen Sie alle notwendigen Daten ein, um zur Datenbank eine Verbindung herstellen zu können</string>
+    <string name="toast_settings_datenbankverbindung_falsch">Verbindung zur Datenbank fehlgeschlagen</string>
+
+    <string name="query_Lehrer_getAll">SELECT * FROM `lehrer`</string>
 </resources>
