@@ -1,29 +1,111 @@
 package leila.tabletverwaltung;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.google.android.gms.vision.Frame;
+
+import java.lang.reflect.Array;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import leila.tabletverwaltung.Adapter.LehrerAdapter;
+import leila.tabletverwaltung.DataConnection.DbConnection;
+import leila.tabletverwaltung.DataTypes.Lehrer;
+
 public class MainActivity extends AppCompatActivity {
+    private DbConnection dbc;
+
+    private String url;
+    private String benutzer;
+    private String passwort;
+    private Intent nextIntent;
 
     private Spinner sLehrer;
     private RelativeLayout rlGeraete;
     private RelativeLayout rlEinlesen;
-    private ArrayList<String> lehrer = new ArrayList<>();
+    private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
+
+    private RelativeLayout flLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
+        flLoading.setVisibility(View.VISIBLE);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        url = sp.getString(SettingsActivity.SP_URL, null);
+        benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
+        passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                if(url != null && benutzer != null && passwort != null) {
+                    DbConnection con = null;
+                    try {
+                        con = DbConnection.connect(getBaseContext());
+                        ResultSet rs = con.Select("SELECT 1 as `valid`");
+                        rs.first();
+                        if(rs.getInt("valid") != 1) {
+                            nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                    }finally {
+                        if(con != null){
+                            con.disconnect();
+                        }
+                    }
+                }else{
+                    nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(nextIntent != null){
+                            Toast.makeText(MainActivity.this, "Verbindung konnte nicht hergestellt werden", Toast.LENGTH_LONG).show();
+                            startActivity(nextIntent);
+                        }else{
+                            createMainActivity();
+                        }
+
+                    }
+                });
+
+            }
+        }).start();
+
+
+
+
+    }
+
+
+    private void createMainActivity(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         sLehrer = (Spinner) findViewById(R.id.sLehrer);
         rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
@@ -32,10 +114,12 @@ public class MainActivity extends AppCompatActivity {
         rlEinlesen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ReaderActivity.class);
+                Intent i = new Intent(MainActivity.this, ReaderActivity.class);
                 startActivity(i);
             }
         });
+
+        Log.i("STATE", "here");
 
         initSpinnerLehrer();
     }
@@ -65,10 +149,54 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initSpinnerLehrer(){
-        lehrer.add("Ruhl Holger");
-        lehrer.add("Schlüter Bernd");
+        //  Färbt das Dreieck des Spinners weis
+        sLehrer.getBackground().setColorFilter(getResources().getColor(R.color.white200), PorterDuff.Mode.SRC_ATOP);
 
-        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, lehrer);
-        sLehrer.setAdapter(adapter);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.lehrer = Lehrer.getAll(getBaseContext());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LehrerAdapter adapter = new LehrerAdapter(getApplicationContext(), MainActivity.lehrer);
+                        Log.i("TEST", "here");
+                        sLehrer.setAdapter(adapter);
+                        flLoading.setVisibility(View.GONE);
+                    }
+                });
+            }
+        }).start();
+
+        //  Asynctask um die DB auszulesen ohne die MainThread zu blockieren
+
     }
+
+
+
+
 }
+
+
+
+//class LadeLehrer extends AsyncTask<String, String, ArrayList<Lehrer>> {
+//    private ArrayList<Lehrer> lehrer;
+//
+//    @Override
+//    protected ArrayList<Lehrer> doInBackground(String... params) {
+//        lehrer = Lehrer.getAll(getBaseContext());
+//        return lehrer;
+//    }
+//
+//    @Override
+//    protected void onPostExecute(ArrayList<Lehrer> lehrer) {
+//        super.onPostExecute(lehrer);
+//        //  Die Lehrer dem Spinner zuweisen.
+//        Log.i("TEST", "here");
+//        LehrerAdapter adapter = new LehrerAdapter(getApplicationContext(), lehrer);
+//        sLehrer.setAdapter(adapter);
+//    }
+//}
+
+

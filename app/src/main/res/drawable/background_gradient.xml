@@ -7,7 +7,7 @@
         android:centerY="50%"
 
         android:gradientRadius="100%"
-        android:startColor="#BB36B6FF"
-        android:endColor="#00a2ff"
+        android:startColor="#66C7FF"
+        android:endColor="@color/backgroundColor"
         android:type="radial"/>
 </shape>

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import leila.tabletverwaltung.DataConnection.DbConnection;
 import leila.tabletverwaltung.DataConnection.DbConnection_alt;
 import leila.tabletverwaltung.R;
 
@@ -23,12 +24,12 @@ public class Lehrer extends Person {
 
 
     public static ArrayList<Lehrer> getAll(Context context){
-        DbConnection_alt db = DbConnection_alt.CreateInstance(context);
-
+        DbConnection dbc = DbConnection.connect(context);
 
         ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
+
         String query = context.getResources().getString(R.string.query_Lehrer_getAll);
-        ResultSet rs = db.Select(query);
+        ResultSet rs = dbc.Select(query);
 
         try {
             while(rs.next()){
@@ -38,6 +39,7 @@ public class Lehrer extends Person {
             e.printStackTrace();
         }
 
+        dbc.disconnect();
         return lehrer;
     }
 

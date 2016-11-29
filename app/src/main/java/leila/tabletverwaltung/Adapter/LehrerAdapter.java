@@ -24,6 +24,19 @@ public class LehrerAdapter extends BaseAdapter {
         this.lehrer = lehrer;
     }
 
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        Lehrer l = getItem(position);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.adapter_lehrer_list, parent, false);
+        }
+
+        TextView tvLehrer = (TextView)convertView.findViewById(R.id.tvLehrer);
+        tvLehrer.setText(l.getName()+" "+l.getVorname());
+        convertView.setTag(l.getId());
+
+        return convertView;
+    }
 
     @Override
     public int getCount() {

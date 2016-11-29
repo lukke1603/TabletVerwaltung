@@ -10,6 +10,8 @@
     <color name="white200">#c8ffffff</color>
     <color name="white50">#77ffffff</color>
     <color name="backgroundColor">#00a2ff</color>
+    <color name="Primary20">#3F3b3b3b</color>
+    <color name="Primary50">#773b3b3b</color>
 
     <color name="loadingSpinnerStart">@color/white200</color>
     <color name="loadingSpinnerStop">#00ffffff</color>

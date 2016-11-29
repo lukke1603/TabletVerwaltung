@@ -9,13 +9,20 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.Map;
+import java.util.Set;
+
+import leila.tabletverwaltung.DataConnection.DbConnection;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -30,9 +37,12 @@ public class SettingsActivity extends AppCompatActivity {
     public static String SP_BENUTZER = SP_PREFIX+".benutzer";
     public static String SP_PASSWORT = SP_PREFIX+".passwort";
 
+    private boolean isCheckingConnection = false;
     private InputMethodManager imm;
 
+    private Intent nextIntent;
 
+    private RelativeLayout flLoading;
 
 
     private Map spOld;
@@ -42,6 +52,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
 
         this.imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         this.sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -64,13 +76,15 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if(isCheckingConnection) return true;
 
         if(id == android.R.id.home){
             validateChanges();
             return true;
         }else if (id == R.id.einstellungenSpeichern) {
             saveSettings();
-            NavUtils.navigateUpTo(this, NavUtils.getParentActivityIntent(this));
+            checkDbConnection();
+//            NavUtils.navigateUpTo(this, NavUtils.getParentActivityIntent(this));
             return true;
         }
 
@@ -93,19 +107,22 @@ public class SettingsActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveSettings();
-                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
+                            checkDbConnection();
+//                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setNegativeButton(R.string.alertEinstellungenSpeichernNegativeButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
+                            checkDbConnection();
+//                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }else{
-            NavUtils.navigateUpTo(this, upIntent);
+            checkDbConnection();
+//            NavUtils.navigateUpTo(this, upIntent);
         }
     }
 
@@ -126,6 +143,55 @@ public class SettingsActivity extends AppCompatActivity {
         this.etUrl.setText(this.sp.getString(SP_URL, DEFAULT_URL));
         this.etBenutzer.setText(this.sp.getString(SP_BENUTZER, null));
         this.etPasswort.setText(this.sp.getString(SP_PASSWORT, null));
+    }
+
+
+    private void checkDbConnection(){
+        flLoading.setVisibility(View.VISIBLE);
+        isCheckingConnection = true;
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final String url = sp.getString(SettingsActivity.SP_URL, null);
+        final String benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
+        final String passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(url != null && benutzer != null && passwort != null) {
+                    DbConnection con = null;
+                    try {
+                        con = DbConnection.connect(getBaseContext());
+                        if(con.isValid()){
+                            nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        if(con != null){
+                            con.disconnect();
+                        }
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(nextIntent == null){
+                            Log.i("TOAST", "here");
+                            nextIntent = new Intent(SettingsActivity.this, SettingsActivity.class);
+                            Toast.makeText(SettingsActivity.this, "Verbindung konnte nicht hergestellt werden", Toast.LENGTH_LONG).show();
+                        }else{
+                            startActivity(nextIntent);
+                        }
+
+                        flLoading.setVisibility(View.GONE);
+                        isCheckingConnection = false;
+                    }
+                });
+
+            }
+        }).start();
     }
 
 

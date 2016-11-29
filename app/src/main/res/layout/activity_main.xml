@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient">
 
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -120,4 +121,5 @@
             android:layout_alignStart="@id/tvLehrer"
             android:layout_marginTop="20dp" />
     </RelativeLayout>
+    <include layout="@layout/loading_overlay"/>
 </RelativeLayout>

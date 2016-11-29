@@ -46,6 +46,8 @@
     </style>
 
 
+
+
     <style name="AlertDialogTitle">
         <item name="android:textColor">@color/white200</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>

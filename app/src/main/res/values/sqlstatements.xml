@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="query_Lehrer_getAll">SELECT * FROM `lehrer` ORDER BY `leh_name` ASC</string>
 </resources>

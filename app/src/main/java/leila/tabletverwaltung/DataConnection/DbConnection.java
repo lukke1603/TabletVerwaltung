@@ -1,6 +1,7 @@
 package leila.tabletverwaltung.DataConnection;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -117,16 +118,37 @@ public class DbConnection {
 
         try{
             DriverManager.setLoginTimeout(5);
-            mConnection = (Connection) DriverManager.getConnection
-                    (url,benutzer,passwort);
+            if(mConnection == null){
+                mConnection = (Connection) DriverManager.getConnection
+                        (url,benutzer,passwort);
+            }
         }catch (SQLException e){
             Log.e("SQL",e.getMessage());
         }
+    }
+
+
+    public boolean isValid(){
+        ResultSet rs = Select("SELECT 1 as `valid`");
+        try{
+            rs.first();
+            if(rs.getInt("valid") != 1){
+                return false;
+            }else{
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     private void Log(Exception e){
         Log.e("SQLException", e.getMessage());
     }
 
-
+    public ResultSet getmResult() {
+        return mResult;
+    }
 }
