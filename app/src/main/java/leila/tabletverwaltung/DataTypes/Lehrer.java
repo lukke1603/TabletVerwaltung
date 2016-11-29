@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import leila.tabletverwaltung.DataConnection.DbConnection;
+import leila.tabletverwaltung.DataConnection.DbConnection_alt;
 import leila.tabletverwaltung.R;
 
 /**
@@ -23,7 +23,7 @@ public class Lehrer extends Person {
 
 
     public static ArrayList<Lehrer> getAll(Context context){
-        DbConnection db = DbConnection.CreateInstance(context);
+        DbConnection_alt db = DbConnection_alt.CreateInstance(context);
 
 
         ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();

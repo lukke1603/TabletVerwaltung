@@ -15,58 +15,71 @@ import java.sql.SQLException;
 
 import leila.tabletverwaltung.SettingsActivity;
 
+
 /**
- * Created by Lukas on 28.11.2016.
+ * Created by a.moszczynski on 15.11.2016.
  */
-public class DbConnection {
+public class DbConnection_alt {
     private Connection mConnection;
-    private Statement mStatement;
     private ResultSet mResult;
+    private Statement mStatement;
 
-    private String url;
-    private String benutzer;
-    private String passwort;
+    private static DbConnection_alt mInstance;
 
+    private static String mUrl;
+    private static String mUserName;
+    private static String mPassWord;
 
-    public DbConnection(String url, String benutzer, String passwort){
-        this.url = "jdbc:mysql://"+url+"/tabletverwaltung";
-        this.benutzer = benutzer;
-        this.passwort = passwort;
+    private DbConnection_alt(String url, String userName, String passWord){
+        mUrl = "jdbc:mysql://"+url+"/tabletverwaltung";
+        mUserName = userName;
+        mPassWord = passWord;
 
-        initConnection();
+        setConnection();
+    }
+
+    public static DbConnection_alt CreateInstance(String url, String userName, String passWord){
+        if(mInstance == null) {
+            mInstance = new DbConnection_alt(url, userName, passWord);
+        }else {
+            mInstance.setConnection();
+        }
+        return mInstance;
     }
 
 
-    public static DbConnection connect(String url, String benutzer, String passwort){
-        DbConnection dbc = new DbConnection(url, benutzer, passwort);
-        return dbc;
-    }
-
-
-    public static DbConnection connect(Context context){
+    public static DbConnection_alt CreateInstance(Context context){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String url = sp.getString(SettingsActivity.SP_URL, null);
-        String benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
-        String passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
+        if(mInstance == null){
+            mInstance = new DbConnection_alt(sp.getString(SettingsActivity.SP_URL, null), sp.getString(SettingsActivity.SP_BENUTZER, null), sp.getString(SettingsActivity.SP_PASSWORT, null));
+        }else{
+            mInstance.setConnection();
+        }
 
-        DbConnection dbc = new DbConnection(url, benutzer, passwort);
-        return dbc;
+        return mInstance;
     }
 
 
-    public ResultSet Select(String query){
-        if(mConnection == null) initConnection();
+    public static DbConnection_alt GetInstance(){
+        if(mInstance == null){
+            mInstance = new DbConnection_alt(mUrl, mUserName,mPassWord);
+        }else{
+            mInstance.setConnection();
+        }
 
+        return  mInstance;
+    }
+
+    public ResultSet Select(String query){
         try{
             mStatement = (Statement) mConnection.createStatement();
             mResult = mStatement.executeQuery(query);
         }catch (SQLException e){
-            e.printStackTrace();
+            Log(e);
         }
         return  mResult;
     }
-
 
     public void Update(String sql){
         try {
@@ -93,19 +106,21 @@ public class DbConnection {
     }
 
 
-
-    public void disconnect(){
+    public void close(){
         try {
-            if(mResult != null) this.mResult.close();
-            if(mStatement != null) this.mStatement.close();
-            if(mConnection != null) this.mConnection.close();
+            if(this.mConnection != null){
+                if(mResult != null) this.mResult.close();
+                if(mStatement != null) this.mStatement.close();
+                if(mConnection != null) this.mConnection.close();
+                this.mInstance = null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
 
-    private void initConnection(){
+    public void setConnection(){
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -118,15 +133,27 @@ public class DbConnection {
         try{
             DriverManager.setLoginTimeout(5);
             mConnection = (Connection) DriverManager.getConnection
-                    (url,benutzer,passwort);
+                    (mUrl,mUserName,mPassWord);
         }catch (SQLException e){
             Log.e("SQL",e.getMessage());
         }
     }
 
+
     private void Log(Exception e){
         Log.e("SQLException", e.getMessage());
     }
 
-
+    public Connection getmConnection() {
+        return mConnection;
+    }
 }
+
+
+
+
+
+
+
+
+
