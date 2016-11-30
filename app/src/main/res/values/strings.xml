@@ -15,6 +15,9 @@
 
     <string name="toast_settings_datenbankverbindung_eintragen">Bitte tragen Sie alle notwendigen Daten ein, um zur Datenbank eine Verbindung herstellen zu können</string>
     <string name="toast_settings_datenbankverbindung_falsch">Verbindung zur Datenbank fehlgeschlagen</string>
+    <string name="toast_settings_verbindung_fehlgeschlagen">Es konnte keine Verbindung zur Datenbank hergestellt werden</string>
+    <string name="background_for_loading_screen">Background for Loading screen</string>
+    <string name="tvLoading">LÄDT...</string>
 
 
 </resources>

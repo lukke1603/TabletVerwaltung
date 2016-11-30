@@ -53,6 +53,8 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        Log.i("ACTIVITY", "SettingsActivity");
+
         flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
 
         this.imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -77,6 +79,8 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(isCheckingConnection) return true;
+
+        this.imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         if(id == android.R.id.home){
             validateChanges();
@@ -180,13 +184,16 @@ public class SettingsActivity extends AppCompatActivity {
                         if(nextIntent == null){
                             Log.i("TOAST", "here");
                             nextIntent = new Intent(SettingsActivity.this, SettingsActivity.class);
-                            Toast.makeText(SettingsActivity.this, "Verbindung konnte nicht hergestellt werden", Toast.LENGTH_LONG).show();
-                        }else{
-                            startActivity(nextIntent);
+                            Toast.makeText(SettingsActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
+
+//                            flLoading.setVisibility(View.GONE);
+                            isCheckingConnection = false;
+                        }else{  //  Wenn MainActivity aufgerufen wird
+                            nextIntent.putExtra("connectionIsValid", true);
                         }
 
-                        flLoading.setVisibility(View.GONE);
-                        isCheckingConnection = false;
+                        startActivity(nextIntent);
+
                     }
                 });
 

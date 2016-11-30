@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout rlEinlesen;
     private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
 
+    private boolean isCheckingConnection = false;
+
     private RelativeLayout flLoading;
 
     @Override
@@ -49,54 +51,66 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.i("ACTIVITY", "Mainactivity");
+
         flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
         flLoading.setVisibility(View.VISIBLE);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        url = sp.getString(SettingsActivity.SP_URL, null);
-        benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
-        passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
+        boolean connectionIsValid = getIntent().getBooleanExtra("connectionIsValid", false);
+        if(connectionIsValid) {
+            createMainActivity();
+        }else{
+            isCheckingConnection = true;
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            url = sp.getString(SettingsActivity.SP_URL, null);
+            benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
+            passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                if(url != null && benutzer != null && passwort != null) {
-                    DbConnection con = null;
-                    try {
-                        con = DbConnection.connect(getBaseContext());
-                        ResultSet rs = con.Select("SELECT 1 as `valid`");
-                        rs.first();
-                        if(rs.getInt("valid") != 1) {
+                    if(url != null && benutzer != null && passwort != null) {
+                        DbConnection con = null;
+                        try {
+                            con = DbConnection.connect(getBaseContext());
+                            ResultSet rs = con.Select("SELECT 1 as `valid`");
+                            rs.first();
+                            if(rs.getInt("valid") != 1) {
+                                nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
                             nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                        }finally {
+                            if(con != null){
+                                con.disconnect();
+                            }
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    }else{
                         nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                    }finally {
-                        if(con != null){
-                            con.disconnect();
-                        }
                     }
-                }else{
-                    nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(nextIntent != null){
+                                Log.i("TOAST", "Mainacti");
+                                Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
+                                startActivity(nextIntent);
+                            }else{
+                                isCheckingConnection = false;
+                                createMainActivity();
+                            }
+
+                        }
+                    });
+
                 }
+            }).start();
+        }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(nextIntent != null){
-                            Toast.makeText(MainActivity.this, "Verbindung konnte nicht hergestellt werden", Toast.LENGTH_LONG).show();
-                            startActivity(nextIntent);
-                        }else{
-                            createMainActivity();
-                        }
 
-                    }
-                });
-
-            }
-        }).start();
 
 
 
