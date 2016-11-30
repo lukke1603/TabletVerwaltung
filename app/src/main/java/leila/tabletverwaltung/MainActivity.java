@@ -1,29 +1,28 @@
 package leila.tabletverwaltung;
 
-import android.app.ProgressDialog;
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.Frame;
 
-import java.lang.reflect.Array;
-import java.sql.ResultSet;
+import java.security.Permission;
 import java.util.ArrayList;
+import java.util.jar.*;
 
 import leila.tabletverwaltung.Adapter.LehrerAdapter;
 import leila.tabletverwaltung.DataConnection.DbConnection;
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
 
     private boolean isCheckingConnection = false;
+    public static final int PERMISSION_REQUEST_CODE_CAMERA = 1;
 
     private RelativeLayout flLoading;
 
@@ -61,59 +61,22 @@ public class MainActivity extends AppCompatActivity {
             createMainActivity();
         }else{
             isCheckingConnection = true;
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            url = sp.getString(SettingsActivity.SP_URL, null);
-            benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
-            passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
 
-            new Thread(new Runnable() {
+            Utility.checkDbConnection(getBaseContext(), this, new Runnable() {
                 @Override
                 public void run() {
-
-                    if(url != null && benutzer != null && passwort != null) {
-                        DbConnection con = null;
-                        try {
-                            con = DbConnection.connect(getBaseContext());
-                            ResultSet rs = con.Select("SELECT 1 as `valid`");
-                            rs.first();
-                            if(rs.getInt("valid") != 1) {
-                                nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                        }finally {
-                            if(con != null){
-                                con.disconnect();
-                            }
-                        }
-                    }else{
-                        nextIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                    }
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(nextIntent != null){
-                                Log.i("TOAST", "Mainacti");
-                                Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
-                                startActivity(nextIntent);
-                            }else{
-                                isCheckingConnection = false;
-                                createMainActivity();
-                            }
-
-                        }
-                    });
-
+                    isCheckingConnection = false;
+                    createMainActivity();
                 }
-            }).start();
+            }, new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(i);
+                }
+            });
         }
-
-
-
-
-
 
     }
 
@@ -125,15 +88,29 @@ public class MainActivity extends AppCompatActivity {
         rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
         rlEinlesen = (RelativeLayout) findViewById(R.id.rlEinlesen);
 
+        final Activity currentActivity = this;
         rlEinlesen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, ReaderActivity.class);
-                startActivity(i);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int perm = currentActivity.checkSelfPermission(Manifest.permission.CAMERA);
+                    if (perm != PackageManager.PERMISSION_GRANTED) {
+                        // Permission not granted (need to ask for it).
+                        currentActivity.requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE_CAMERA);
+                    }
+                    else {
+                        // Permission granted (user already accepted).
+                        Intent i = new Intent(MainActivity.this, ReaderActivity.class);
+                        startActivity(i);
+                    }
+                } else {
+                    // Permission granted (because no runtime permission).
+                    Intent i = new Intent(MainActivity.this, ReaderActivity.class);
+                    startActivity(i);
+                }
             }
         });
-
-        Log.i("STATE", "here");
 
         initSpinnerLehrer();
     }
@@ -144,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
-
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if (isCheckingConnection) return false;
 
         if (id == R.id.einstellungen) {
             Intent i = new Intent(this.getApplicationContext(), SettingsActivity.class);
@@ -175,42 +152,28 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         LehrerAdapter adapter = new LehrerAdapter(getApplicationContext(), MainActivity.lehrer);
-                        Log.i("TEST", "here");
                         sLehrer.setAdapter(adapter);
                         flLoading.setVisibility(View.GONE);
                     }
                 });
             }
         }).start();
-
-        //  Asynctask um die DB auszulesen ohne die MainThread zu blockieren
-
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode){
+            case PERMISSION_REQUEST_CODE_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    rlEinlesen.performClick();
+                }
+                break;
+        }
 
-
+    }
 }
 
 
-
-//class LadeLehrer extends AsyncTask<String, String, ArrayList<Lehrer>> {
-//    private ArrayList<Lehrer> lehrer;
-//
-//    @Override
-//    protected ArrayList<Lehrer> doInBackground(String... params) {
-//        lehrer = Lehrer.getAll(getBaseContext());
-//        return lehrer;
-//    }
-//
-//    @Override
-//    protected void onPostExecute(ArrayList<Lehrer> lehrer) {
-//        super.onPostExecute(lehrer);
-//        //  Die Lehrer dem Spinner zuweisen.
-//        Log.i("TEST", "here");
-//        LehrerAdapter adapter = new LehrerAdapter(getApplicationContext(), lehrer);
-//        sLehrer.setAdapter(adapter);
-//    }
-//}
 
 

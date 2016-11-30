@@ -129,8 +129,8 @@ public class DbConnection {
 
 
     public boolean isValid(){
-        ResultSet rs = Select("SELECT 1 as `valid`");
         try{
+            ResultSet rs = Select("SELECT 1 as `valid`");
             rs.first();
             if(rs.getInt("valid") != 1){
                 return false;

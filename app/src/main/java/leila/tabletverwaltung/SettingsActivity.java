@@ -38,12 +38,8 @@ public class SettingsActivity extends AppCompatActivity {
     public static String SP_PASSWORT = SP_PREFIX+".passwort";
 
     private boolean isCheckingConnection = false;
-    private InputMethodManager imm;
-
-    private Intent nextIntent;
 
     private RelativeLayout flLoading;
-
 
     private Map spOld;
     private SharedPreferences sp;
@@ -57,7 +53,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
 
-        this.imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         this.sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         initViews();
@@ -80,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(isCheckingConnection) return true;
 
-        this.imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        Utility.hideKeyboard(this);
 
         if(id == android.R.id.home){
             validateChanges();
@@ -88,7 +83,6 @@ public class SettingsActivity extends AppCompatActivity {
         }else if (id == R.id.einstellungenSpeichern) {
             saveSettings();
             checkDbConnection();
-//            NavUtils.navigateUpTo(this, NavUtils.getParentActivityIntent(this));
             return true;
         }
 
@@ -102,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
                 !this.etPasswort.getText().toString().equals(this.spOld.get(SP_PASSWORT).toString()) ||
                 !this.etUrl.getText().toString().equals(this.spOld.get(SP_URL).toString())){
 
-            this.imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            Utility.hideKeyboard(this);
 
             new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog)
                     .setTitle(R.string.alertEinstellungenSpeichernTitle)
@@ -112,21 +106,18 @@ public class SettingsActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             saveSettings();
                             checkDbConnection();
-//                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setNegativeButton(R.string.alertEinstellungenSpeichernNegativeButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             checkDbConnection();
-//                            NavUtils.navigateUpTo(SettingsActivity.this, upIntent);
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }else{
             checkDbConnection();
-//            NavUtils.navigateUpTo(this, upIntent);
         }
     }
 
@@ -154,51 +145,62 @@ public class SettingsActivity extends AppCompatActivity {
         flLoading.setVisibility(View.VISIBLE);
         isCheckingConnection = true;
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final String url = sp.getString(SettingsActivity.SP_URL, null);
-        final String benutzer = sp.getString(SettingsActivity.SP_BENUTZER, null);
-        final String passwort = sp.getString(SettingsActivity.SP_PASSWORT, null);
-
-        new Thread(new Runnable() {
+        Utility.checkDbConnection(getBaseContext(), this, new Runnable() {
             @Override
             public void run() {
-                if(url != null && benutzer != null && passwort != null) {
-                    DbConnection con = null;
-                    try {
-                        con = DbConnection.connect(getBaseContext());
-                        if(con.isValid()){
-                            nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }finally {
-                        if(con != null){
-                            con.disconnect();
-                        }
-                    }
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(nextIntent == null){
-                            Log.i("TOAST", "here");
-                            nextIntent = new Intent(SettingsActivity.this, SettingsActivity.class);
-                            Toast.makeText(SettingsActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
-
-//                            flLoading.setVisibility(View.GONE);
-                            isCheckingConnection = false;
-                        }else{  //  Wenn MainActivity aufgerufen wird
-                            nextIntent.putExtra("connectionIsValid", true);
-                        }
-
-                        startActivity(nextIntent);
-
-                    }
-                });
-
+                Intent nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
+                nextIntent.putExtra("connectionIsValid", true);
+                startActivity(nextIntent);
             }
-        }).start();
+        }, new Runnable() {
+            @Override
+            public void run() {
+                Intent nextIntent = new Intent(SettingsActivity.this, SettingsActivity.class);
+                Toast.makeText(SettingsActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
+                startActivity(nextIntent);
+                isCheckingConnection = false;
+            }
+        });
+
+//       new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(Utility.dbParametersValid(getBaseContext())) {
+//                    DbConnection con = null;
+//                    try {
+//                        con = DbConnection.connect(getBaseContext());
+//                        if(con.isValid()){
+//                            nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
+//                        }
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }finally {
+//                        if(con != null){
+//                            con.disconnect();
+//                        }
+//                    }
+//                }
+//
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if(nextIntent == null){
+//                            Log.i("TOAST", "here");
+//                            nextIntent = new Intent(SettingsActivity.this, SettingsActivity.class);
+//                            Toast.makeText(SettingsActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
+//
+//                            isCheckingConnection = false;
+//                        }else{  //  Wenn MainActivity aufgerufen wird
+//                            nextIntent.putExtra("connectionIsValid", true);
+//                        }
+//
+//                        startActivity(nextIntent);
+//
+//                    }
+//                });
+//
+//            }
+//        }).start();
     }
 
 
