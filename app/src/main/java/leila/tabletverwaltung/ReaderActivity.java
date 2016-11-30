@@ -1,9 +1,11 @@
 package leila.tabletverwaltung;
 
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
@@ -57,8 +59,8 @@ public class ReaderActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
@@ -72,7 +74,7 @@ public class ReaderActivity extends AppCompatActivity {
                 Uri.parse("android-app://leila.tabletverwaltung/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
-        Log.e("ACTION", "STOP");
+        Log.e("ACTION", "PAUSE");
         cameraSource.stop();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -81,9 +83,9 @@ public class ReaderActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("ACTION", "RESTART");
+    protected void onResume() {
+        super.onResume();
+        Log.e("ACTION", "RESUME");
         initCamera();
     }
 
@@ -155,6 +157,9 @@ public class ReaderActivity extends AppCompatActivity {
                         }
                     });
 
+                    if (ActivityCompat.checkSelfPermission(ReaderActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                       return;
+                    }
                     cameraSource.start(cameraView.getHolder());
                     cameraFocus(cameraSource, Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
                 } catch (IOException e) {
@@ -174,23 +179,5 @@ public class ReaderActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Reader Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://leila.tabletverwaltung/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
 }

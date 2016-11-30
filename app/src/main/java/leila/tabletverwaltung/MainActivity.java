@@ -54,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         Log.i("ACTIVITY", "Mainactivity");
 
         flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
+    }
+
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
         flLoading.setVisibility(View.VISIBLE);
 
         boolean connectionIsValid = getIntent().getBooleanExtra("connectionIsValid", false);
@@ -66,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     isCheckingConnection = false;
+
                     createMainActivity();
                 }
             }, new Runnable() {
@@ -77,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
 

@@ -14,6 +14,10 @@ import leila.tabletverwaltung.R;
  * Created by a.moszczynski on 15.11.2016.
  */
 public class Lehrer extends Person {
+
+    public static ArrayList<Lehrer> lehrerListe;
+    public static Long zuletztGeaendertLehrerListe;
+
     public Lehrer(Context context, int id, String name, String vorname) {
         super(context, id, name, vorname);
     }
@@ -24,23 +28,29 @@ public class Lehrer extends Person {
 
 
     public static ArrayList<Lehrer> getAll(Context context){
-        DbConnection dbc = DbConnection.connect(context);
+        Long currentTs = System.currentTimeMillis() / (1000 * 1000);
+        int dayInSeconds = 60 * 60 * 24;
+        if(Lehrer.lehrerListe == null || (Lehrer.zuletztGeaendertLehrerListe != null && (Lehrer.zuletztGeaendertLehrerListe - currentTs) > dayInSeconds)){
+            DbConnection dbc = DbConnection.connect(context);
 
-        ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
+            String query = context.getResources().getString(R.string.query_Lehrer_getAll);
+            ResultSet rs = dbc.Select(query);
 
-        String query = context.getResources().getString(R.string.query_Lehrer_getAll);
-        ResultSet rs = dbc.Select(query);
-
-        try {
-            while(rs.next()){
-                lehrer.add(Lehrer.createFromResult(context, rs));
+            try {
+                Lehrer.lehrerListe = new ArrayList<Lehrer>();
+                while(rs.next()){
+                    Lehrer.lehrerListe.add(Lehrer.createFromResult(context, rs));
+                }
+                Lehrer.zuletztGeaendertLehrerListe = System.currentTimeMillis() / (1000 * 1000);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        dbc.disconnect();
-        return lehrer;
+            dbc.disconnect();
+            return Lehrer.lehrerListe;
+        }else{
+            return Lehrer.lehrerListe;
+        }
     }
 
 
