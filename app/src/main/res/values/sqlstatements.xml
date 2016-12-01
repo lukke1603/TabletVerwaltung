@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="query_Lehrer_getAll">SELECT * FROM `lehrer` ORDER BY `leh_name` ASC</string>
+    <string name="query_Hardware_getAll">SELECT * FROM `hardware` ORDER BY `har_seriennummer` ASC</string>
 </resources>

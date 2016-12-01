@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Utility.initApplicationData(getApplicationContext());
+
         Log.i("ACTIVITY", "Mainactivity");
 
         flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);

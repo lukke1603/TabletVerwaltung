@@ -151,6 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
                 nextIntent.putExtra("connectionIsValid", true);
                 startActivity(nextIntent);
+                finish();
             }
         }, new Runnable() {
             @Override
@@ -159,48 +160,11 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
                 startActivity(nextIntent);
                 isCheckingConnection = false;
+                finish();
             }
         });
 
-//       new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(Utility.dbParametersValid(getBaseContext())) {
-//                    DbConnection con = null;
-//                    try {
-//                        con = DbConnection.connect(getBaseContext());
-//                        if(con.isValid()){
-//                            nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
-//                        }
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                    }finally {
-//                        if(con != null){
-//                            con.disconnect();
-//                        }
-//                    }
-//                }
 //
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if(nextIntent == null){
-//                            Log.i("TOAST", "here");
-//                            nextIntent = new Intent(SettingsActivity.this, SettingsActivity.class);
-//                            Toast.makeText(SettingsActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
-//
-//                            isCheckingConnection = false;
-//                        }else{  //  Wenn MainActivity aufgerufen wird
-//                            nextIntent.putExtra("connectionIsValid", true);
-//                        }
-//
-//                        startActivity(nextIntent);
-//
-//                    }
-//                });
-//
-//            }
-//        }).start();
     }
 
 

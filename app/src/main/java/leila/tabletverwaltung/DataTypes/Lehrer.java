@@ -27,19 +27,19 @@ public class Lehrer extends Person {
     }
 
 
-    public static ArrayList<Lehrer> getAll(Context context){
+    public static ArrayList<Lehrer> getAll(Context baseContext){
         Long currentTs = System.currentTimeMillis() / (1000 * 1000);
         int dayInSeconds = 60 * 60 * 24;
         if(Lehrer.lehrerListe == null || (Lehrer.zuletztGeaendertLehrerListe != null && (Lehrer.zuletztGeaendertLehrerListe - currentTs) > dayInSeconds)){
-            DbConnection dbc = DbConnection.connect(context);
+            DbConnection dbc = DbConnection.connect(baseContext);
 
-            String query = context.getResources().getString(R.string.query_Lehrer_getAll);
+            String query = baseContext.getResources().getString(R.string.query_Lehrer_getAll);
             ResultSet rs = dbc.Select(query);
 
             try {
                 Lehrer.lehrerListe = new ArrayList<Lehrer>();
                 while(rs.next()){
-                    Lehrer.lehrerListe.add(Lehrer.createFromResult(context, rs));
+                    Lehrer.lehrerListe.add(Lehrer.createFromResult(baseContext, rs));
                 }
                 Lehrer.zuletztGeaendertLehrerListe = System.currentTimeMillis() / (1000 * 1000);
             } catch (SQLException e) {
