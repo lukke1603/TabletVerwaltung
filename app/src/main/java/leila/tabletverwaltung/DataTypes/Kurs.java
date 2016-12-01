@@ -36,6 +36,7 @@ public class Kurs extends DataType {
             e.printStackTrace();
         }
 
+        dbc.disconnect();
         return kurs;
     }
 

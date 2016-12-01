@@ -32,6 +32,7 @@ public class GeraeteActivity extends AppCompatActivity {
 
         geraete = Hardware.getAll(getBaseContext(), true);
 
+
         Log.i("HERE", "here");
         GeraeteAdapter gAdapter = new GeraeteAdapter(getApplicationContext(), geraete);
         lvGeraete.setAdapter(gAdapter);

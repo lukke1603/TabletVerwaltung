@@ -42,6 +42,7 @@ public class Schueler extends Person {
             e.printStackTrace();
         }
 
+        dbc.disconnect();
         return schueler;
     }
 
