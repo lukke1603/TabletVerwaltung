@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="query_Lehrer_getAll">SELECT * FROM `lehrer` ORDER BY `leh_name` ASC</string>
-    <string name="query_Hardware_getAll">SELECT * FROM `hardware` ORDER BY `har_seriennummer` ASC</string>
+    <string name="query_Hardware_getAll">
+        SELECT
+            `hardware`.`har_id`,
+            `hardware`.`har_seriennummer`,
+            `hardware`.`har_beschreibung`,
+            `hardware`.`har_bemerkung`,
+            `schueler`.`sch_name`,
+            `schueler`.`sch_vorname`,
+            `kurs`.`kur_name`
+        FROM
+            `hardware`
+        LEFT JOIN
+            `historie`
+        ON
+            `historie`.`his_hardware` = `hardware`.`har_id`
+        LEFT JOIN
+            `schueler`
+        ON
+            `schueler`.`sch_id` = `historie`.`his_verliehen_an`
+        LEFT JOIN
+            `kurs`
+        ON
+            `kurs`.`kur_id` = `historie`.`his_kurs`
+        ORDER BY
+            `hardware`.`har_seriennummer`
+    </string>
+
+    <string name="query_Hardware_getAllWithRef">
+        SELECT
+            `hardware`.`har_id`,
+            `hardware`.`har_seriennummer`,
+            `hardware`.`har_beschreibung`,
+            `hardware`.`har_bemerkung`,
+            `schueler`.`sch_id`,
+            `kurs`.`kur_id`
+        FROM
+            `hardware`
+        LEFT JOIN
+            `historie`
+        ON
+            `historie`.`his_hardware` = `hardware`.`har_id`
+        LEFT JOIN
+            `schueler`
+        ON
+            `schueler`.`sch_id` = `historie`.`his_verliehen_an`
+        LEFT JOIN
+            `kurs`
+        ON
+            `kurs`.`kur_id` = `historie`.`his_kurs`
+        ORDER BY
+            `hardware`.`har_seriennummer`
+    </string>
+
+    <string formatted="false" name="query_Schueler_get">SELECT * FROM `schueler` WHERE `sch_id` = \'%sch_id%\' </string>
+    <string formatted="false" name="query_Kurs_get">SELECT * FROM `kurs` WHERE `kur_id` = \'%kur_id%\'</string>
 </resources>

@@ -1,6 +1,7 @@
 package leila.tabletverwaltung.DataTypes;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ public class Hardware extends DataType {
     private long mSeriennummer;
     private String mBeschreibung;
     private String mBemerkung;
+    private Object mVerliehenAn;
+
 
     public Hardware(Context context) {
         super(context);
@@ -28,13 +31,13 @@ public class Hardware extends DataType {
     //TODO: implement hardware
 
 
-    public static ArrayList<Hardware> getAll(Context baseContext){
+    public static ArrayList<Hardware> getAll(Context baseContext, boolean update){
         Long currentTs = System.currentTimeMillis() / (1000 * 1000);
         int dayInSeconds = 60 * 60 * 24;
-        if(Hardware.geraeteListe == null || (Hardware.zuletztGeaendertGeraeteListe != 0 && (Hardware.zuletztGeaendertGeraeteListe - currentTs) > dayInSeconds)){
+        if(update || Hardware.geraeteListe == null || (Hardware.zuletztGeaendertGeraeteListe != 0 && (Hardware.zuletztGeaendertGeraeteListe - currentTs) > dayInSeconds)){
             DbConnection dbc = DbConnection.connect(baseContext);
 
-            String query = baseContext.getResources().getString(R.string.query_Hardware_getAll);
+            String query = baseContext.getResources().getString(R.string.query_Hardware_getAllWithRef);
             ResultSet rs = dbc.Select(query);
 
             try {
@@ -55,13 +58,21 @@ public class Hardware extends DataType {
     }
 
 
-    public static Hardware createFromResult(Context context, ResultSet rs){
-        Hardware geraet = new Hardware(context);
+    public static Hardware createFromResult(Context baseContext, ResultSet rs){
+        Hardware geraet = new Hardware(baseContext);
         try {
             geraet.setmId(rs.getInt("har_id"));
             geraet.setmSeriennummer(rs.getLong("har_seriennummer"));
             geraet.setmBeschreibung(rs.getString("har_beschreibung"));
             geraet.setmBemerkung(rs.getString("har_bemerkung"));
+            Object verliehenAn = null;
+            if(rs.getInt("sch_id") != 0){       //  Ausgeliehen an einen Schüler
+                verliehenAn = Schueler.get(baseContext, rs.getInt("sch_id"));
+            }else if(rs.getInt("kur_id") != 0){ //  Ausgeliehen an eine Klasse
+                verliehenAn = null;
+            }
+
+            geraet.setmVerliehenAn(verliehenAn);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -100,5 +111,13 @@ public class Hardware extends DataType {
 
     public void setmBemerkung(String mBemerkung) {
         this.mBemerkung = mBemerkung;
+    }
+
+    public Object getmVerliehenAn() {
+        return mVerliehenAn;
+    }
+
+    public void setmVerliehenAn(Object mVerliehenAn) {
+        this.mVerliehenAn = mVerliehenAn;
     }
 }

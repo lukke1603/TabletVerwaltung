@@ -33,6 +33,10 @@
             android:name=".SettingsActivity"
             android:label="@string/tvEinstellungen"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".GeraeteActivity"
+            android:label="@string/tvGeraete"
+            android:parentActivityName=".MainActivity"/>
 
         <!--
          ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -42,7 +46,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".GeraeteActivity"></activity>
+
     </application>
 
 </manifest>

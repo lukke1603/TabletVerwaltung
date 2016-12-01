@@ -80,13 +80,13 @@ public class Utility {
 
 
     public static void initApplicationData(Context baseContext){
-        if(Lehrer.lehrerListe == null){
-            Lehrer.getAll(baseContext);
-        }
-
-        if(Hardware.geraeteListe == null){
-            Hardware.getAll(baseContext);
-        }
+//        if(Lehrer.lehrerListe == null){
+//            Lehrer.getAll(baseContext);
+//        }
+//
+//        if(Hardware.geraeteListe == null){
+//            Hardware.getAll(baseContext);
+//        }
     }
 
 
