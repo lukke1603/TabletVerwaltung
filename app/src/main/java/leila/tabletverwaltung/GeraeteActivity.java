@@ -30,11 +30,20 @@ public class GeraeteActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        geraete = Hardware.getAll(getBaseContext(), true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                geraete = Hardware.getAll(getBaseContext(), true);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GeraeteAdapter gAdapter = new GeraeteAdapter(getApplicationContext(), geraete);
+                        lvGeraete.setAdapter(gAdapter);
+                    }
+                });
 
+            }
+        }).start();
 
-        Log.i("HERE", "here");
-        GeraeteAdapter gAdapter = new GeraeteAdapter(getApplicationContext(), geraete);
-        lvGeraete.setAdapter(gAdapter);
     }
 }

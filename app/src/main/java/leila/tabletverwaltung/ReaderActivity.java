@@ -126,7 +126,9 @@ public class ReaderActivity extends AppCompatActivity {
                     barcodeDetector = new BarcodeDetector.Builder(ReaderActivity.this).setBarcodeFormats(
                             Barcode.QR_CODE | Barcode.DATA_MATRIX | Barcode.EAN_8 | Barcode.EAN_13 | Barcode.UPC_A | Barcode.UPC_E | Barcode.CODE_128 | Barcode.ITF | Barcode.CODE_39
                     ).build();
-                    cameraSource = new CameraSource.Builder(ReaderActivity.this, barcodeDetector).setRequestedPreviewSize(cameraView.getWidth(), cameraView.getHeight()).build();
+
+                    Log.i("HEIGHT", Integer.toString(cameraView.getHeight()));
+                    cameraSource = new CameraSource.Builder(ReaderActivity.this, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(cameraView.getWidth(), (cameraView.getHeight() / 2)).build();
 
                     barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
                         @Override
