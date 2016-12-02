@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isCheckingConnection = false;
     public static final int PERMISSION_REQUEST_CODE_CAMERA = 1;
 
+    public static final int REQUESTCODE_SETIINGS = 1;
+
     private RelativeLayout flLoading;
 
     @Override
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_settings_verbindung_fehlgeschlagen), Toast.LENGTH_LONG).show();
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
-                    startActivity(i);
+                    startActivityForResult(i, REQUESTCODE_SETIINGS);
                 }
             });
         }
@@ -188,6 +190,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case REQUESTCODE_SETIINGS:
+                if(resultCode == Activity.RESULT_OK && data != null){
+                    onResume();
+                }
+                break;
+        }
     }
 }
 

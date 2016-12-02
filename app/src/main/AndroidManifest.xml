@@ -36,7 +36,11 @@
         <activity
             android:name=".GeraeteActivity"
             android:label="@string/tvGeraete"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".HistorieActivity"
+            android:label="tvHistorie"
+            android:parentActivityName=".GeraeteActivity"/>
 
         <!--
          ATTENTION: This was auto-generated to add Google Play services to your project for

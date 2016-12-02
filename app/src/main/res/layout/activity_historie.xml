@@ -3,19 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="leila.tabletverwaltung.GeraeteActivity"
-    android:background="@drawable/background_gradient"
-    android:padding="0dp">
+    tools:context="leila.tabletverwaltung.HistorieActivity"
+    android:background="@drawable/background_gradient">
+
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lvGeraete"
+        android:id="@+id/lvHistorie"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="0dp"
-        android:divider="@color/white50"
-        android:dividerHeight="1dp"/>
-
-    <include layout="@layout/loading_overlay"/>
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

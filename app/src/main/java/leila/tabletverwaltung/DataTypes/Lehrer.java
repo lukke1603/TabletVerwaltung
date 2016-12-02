@@ -54,6 +54,31 @@ public class Lehrer extends Person {
     }
 
 
+
+    public static Lehrer get(Context baseContext, int id){
+        DbConnection dbc = DbConnection.connect(baseContext);
+
+        String query = baseContext.getResources().getString(R.string.query_Lehrer_get).replace("%leh_id%", Integer.toString(id));
+        ResultSet rs = dbc.Select(query);
+
+        Lehrer lehrer = null;
+        try {
+            if(rs.first()){
+                lehrer = Lehrer.createFromResult(baseContext, rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        dbc.disconnect();
+        return lehrer;
+    }
+
+
+
+
+
+
     public static Lehrer createFromResult(Context context, ResultSet rs){
         Lehrer lehrer = new Lehrer(context);
         try {

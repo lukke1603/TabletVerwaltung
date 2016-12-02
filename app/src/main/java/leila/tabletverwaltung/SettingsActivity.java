@@ -1,5 +1,6 @@
 package leila.tabletverwaltung;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -148,9 +149,12 @@ public class SettingsActivity extends AppCompatActivity {
         Utility.checkDbConnection(getBaseContext(), this, new Runnable() {
             @Override
             public void run() {
-                Intent nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
+//                Intent nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
+
+                Intent nextIntent = new Intent();
                 nextIntent.putExtra("connectionIsValid", true);
-                startActivity(nextIntent);
+                setResult(Activity.RESULT_OK, nextIntent);
+//                startActivity(nextIntent);
                 finish();
             }
         }, new Runnable() {

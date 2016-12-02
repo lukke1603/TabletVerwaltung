@@ -54,6 +54,12 @@
             `hardware`.`har_seriennummer`
     </string>
 
+    <string formatted="false" name="query_Historie_getAll">SELECT * FROM `historie`</string>
+    <string formatted="false" name="query_Historie_getAllWithRef">SELECT * FROM `historie` WHERE `his_hardware` = \'%his_hardware%\'</string>
+
+    <string formatted="false" name="query_Lehrer_get">SELECT * FROM `lehrer` WHERE `leh_id` = \'%leh_id%\'</string>
+
+    <string formatted="false" name="query_Hardware_get">SELECT * FROM `hardware` WHERE `har_id` = \'%har_id%\'</string>
     <string formatted="false" name="query_Schueler_get">SELECT * FROM `schueler` WHERE `sch_id` = \'%sch_id%\' </string>
     <string formatted="false" name="query_Kurs_get">SELECT * FROM `kurs` WHERE `kur_id` = \'%kur_id%\'</string>
 </resources>

@@ -58,6 +58,28 @@ public class Hardware extends DataType {
     }
 
 
+
+    public static Hardware get(Context baseContext, int id){
+        DbConnection dbc = DbConnection.connect(baseContext);
+
+        String query = baseContext.getResources().getString(R.string.query_Hardware_get).replace("%har_id%", Integer.toString(id));
+        ResultSet rs = dbc.Select(query);
+
+        Hardware geraet = null;
+        try {
+            if(rs.first()){
+                geraet = Hardware.createFromResult(baseContext, rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        dbc.disconnect();
+        return geraet;
+    }
+
+
+
     public static Hardware createFromResult(Context baseContext, ResultSet rs){
         Hardware geraet = new Hardware(baseContext);
         try {

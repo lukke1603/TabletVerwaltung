@@ -64,6 +64,8 @@ public class GeraeteAdapter extends BaseAdapter {
         }
 
         tvVerliehen.setText(verliehenAn);
+        convertView.setTag(geraet.getmId());
+
         return convertView;
     }
 }
