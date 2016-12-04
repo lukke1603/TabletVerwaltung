@@ -2,7 +2,10 @@ package leila.tabletverwaltung;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -15,6 +18,7 @@ public class HistorieActivity extends AppCompatActivity {
 
     private int geraeteId;
     private ArrayList<Historie> eintraege;
+    private RelativeLayout progress_overlay;
 
 
     @Override
@@ -22,6 +26,7 @@ public class HistorieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historie);
 
+        progress_overlay = (RelativeLayout)findViewById(R.id.progress_overlay);
         lvHistorie = (ListView) findViewById(R.id.lvHistorie);
         geraeteId = getIntent().getIntExtra("geraeteId", 0);
     }
@@ -31,13 +36,25 @@ public class HistorieActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        progress_overlay.setVisibility(View.VISIBLE);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-
+                Log.i("GeraeteID", Integer.toString(geraeteId));
                 eintraege = Historie.getAll(getBaseContext(), geraeteId, true);
-                HistorieAdapter hAdapter = new HistorieAdapter(getApplicationContext(), eintraege);
-                lvHistorie.setAdapter(hAdapter);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("eintraege", eintraege.toString());
+                        HistorieAdapter hAdapter = new HistorieAdapter(getApplicationContext(), eintraege);
+                        lvHistorie.setAdapter(hAdapter);
+
+                        progress_overlay.setVisibility(View.GONE);
+                    }
+                });
+
 
             }
         }).start();

@@ -1,6 +1,7 @@
 package leila.tabletverwaltung.DataTypes;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.sql.ResultSet;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import leila.tabletverwaltung.DataConnection.DbConnection;
 import leila.tabletverwaltung.R;
@@ -20,8 +22,8 @@ public class Historie extends DataType {
     private Hardware mHardware;
     private Lehrer mVerliehenDurch;
     private Schueler mVerliehenAn;
-    private long mDatumVerleih;
-    private long mDatumRueckgabe;
+    private Timestamp mDatumVerleih;
+    private Timestamp mDatumRueckgabe;
     private Kurs mKurs;
 
 
@@ -29,7 +31,7 @@ public class Historie extends DataType {
     private static long zuletztGeaendertGeraeteListe;
 
 
-    public Historie(Context context, int id, Hardware hardware, Lehrer verliehenDurch, Schueler verliehenAn, long datumVerleih, long datumRueckgabe, Kurs kurs){
+    public Historie(Context context, int id, Hardware hardware, Lehrer verliehenDurch, Schueler verliehenAn, Timestamp datumVerleih, Timestamp datumRueckgabe, Kurs kurs){
         super(context);
         this.mDatumRueckgabe = datumRueckgabe;
         this.mDatumVerleih = datumVerleih;
@@ -41,14 +43,14 @@ public class Historie extends DataType {
     }
 
 
-    public static ArrayList<Historie> getAll(Context baseContext, int id, boolean update){
+    public static ArrayList<Historie> getAll(Context baseContext, int hardwareId, boolean update){
         Long currentTs = System.currentTimeMillis() / (1000 * 1000);
         int dayInSeconds = 60 * 60 * 24;
         if(update || Historie.eintraege == null || (Historie.zuletztGeaendertGeraeteListe != 0 && (Historie.zuletztGeaendertGeraeteListe - currentTs) > dayInSeconds)){
             DbConnection dbc = DbConnection.connect(baseContext);
 
             String query = baseContext.getResources().getString(R.string.query_Historie_getAllWithRef);
-            query.replace("%his_hardware%", Integer.toString(id));
+            query = query.replace("%his_hardware%", Integer.toString(hardwareId));
             ResultSet rs = dbc.Select(query);
 
             try {
@@ -105,14 +107,21 @@ public class Historie extends DataType {
             Schueler schueler = Schueler.get(baseContext, rs.getInt("his_verliehen_an"));
             Kurs kurs = Kurs.get(baseContext, rs.getInt("his_kurs"));
 
+
+            Log.i("TS", rs.getString("his_datum_verleih"));
+
+
+            Timestamp ts_verleih = rs.getTimestamp("his_datum_verleih");
+            Timestamp ts_rueckgabe = rs.getTimestamp("his_datum_rueckgabe");
+
             eintrag = new Historie(
                     baseContext,
                     rs.getInt("his_id"),
                     hardware,
                     lehrer,
                     schueler,
-                    rs.getLong("his_datum_verleih"),
-                    rs.getLong("his_datum_rueckgabe"),
+                    ts_verleih,
+                    ts_rueckgabe,
                     kurs);
 
         } catch (SQLException e) {
@@ -155,19 +164,19 @@ public class Historie extends DataType {
         this.mVerliehenAn = mVerliehenAn;
     }
 
-    public long getmDatumVerleih() {
+    public Timestamp getmDatumVerleih() {
         return mDatumVerleih;
     }
 
-    public void setmDatumVerleih(long mDatumVerleih) {
+    public void setmDatumVerleih(Timestamp mDatumVerleih) {
         this.mDatumVerleih = mDatumVerleih;
     }
 
-    public long getmDatumRueckgabe() {
+    public Timestamp getmDatumRueckgabe() {
         return mDatumRueckgabe;
     }
 
-    public void setmDatumRueckgabe(long mDatumRueckgabe) {
+    public void setmDatumRueckgabe(Timestamp mDatumRueckgabe) {
         this.mDatumRueckgabe = mDatumRueckgabe;
     }
 

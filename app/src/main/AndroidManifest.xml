@@ -39,7 +39,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".HistorieActivity"
-            android:label="tvHistorie"
+            android:label="@string/tvHistorie"
             android:parentActivityName=".GeraeteActivity"/>
 
         <!--

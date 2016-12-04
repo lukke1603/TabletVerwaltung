@@ -1,6 +1,7 @@
 package leila.tabletverwaltung.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import leila.tabletverwaltung.DataTypes.Historie;
 import leila.tabletverwaltung.DataTypes.Kurs;
@@ -57,9 +62,20 @@ public class HistorieAdapter extends BaseAdapter {
         TextView tvDatumRueckgabe = (TextView)convertView.findViewById(R.id.tvDatumRueckgabe);
         TextView tvDatumVerleih = (TextView)convertView.findViewById(R.id.tvDatumVerleih);
 
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+        Date dVerleih = null;
+        Date dRueckgabe = null;
+        try {
+            if(historie.getmDatumVerleih() != null) dVerleih = fmt.parse(historie.getmDatumVerleih().toString());
+            if(historie.getmDatumRueckgabe() != null) dRueckgabe = fmt.parse(historie.getmDatumRueckgabe().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         tvVerliehenDurch.setText(context.getResources().getString(R.string.tvVerliehenDurch_prefix) + " " + historie.getmVerliehenDurch().getVorname() + " " +  historie.getmVerliehenDurch().getName());
-        tvDatumVerleih.setText(Long.toString(historie.getmDatumVerleih()));
-        tvDatumRueckgabe.setText(Long.toString(historie.getmDatumRueckgabe()));
+        tvDatumVerleih.setText((dVerleih != null) ? format.format(dVerleih) + " " + context.getResources().getText(R.string.tvUhr) : "");
+        tvDatumRueckgabe.setText((dRueckgabe != null) ? format.format(dRueckgabe) + " " + context.getResources().getText(R.string.tvUhr) : "");
 
         String verliehenAn = context.getResources().getText(R.string.geraete_verfuegbar).toString();
         if(historie.getmVerliehenAn() != null){
@@ -70,6 +86,6 @@ public class HistorieAdapter extends BaseAdapter {
 
         tvVerliehenAn.setText(verliehenAn);
 
-        return null;
+        return convertView;
     }
 }

@@ -12,5 +12,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/lvHistorie"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:divider="@color/white50"
+        android:dividerHeight="1dp"/>
+
+    <include layout="@layout/loading_overlay"/>
 </RelativeLayout>

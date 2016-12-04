@@ -53,7 +53,7 @@ public class GeraeteAdapter extends BaseAdapter {
         TextView tvBeschreibung = (TextView)convertView.findViewById(R.id.tvBeschreibung);
         TextView tvSeriennummer = (TextView)convertView.findViewById(R.id.tvSeriennummer);
 
-        tvSeriennummer.setText(context.getResources().getText(R.string.tvSeriennummer_prefix) + " " + Long.toString(geraet.getmSeriennummer()));
+        tvSeriennummer.setText(context.getResources().getText(R.string.tvSeriennummer_prefix) + " " + geraet.getmSeriennummer());
         tvBeschreibung.setText(geraet.getmBeschreibung());
 
         String verliehenAn = context.getResources().getText(R.string.geraete_verfuegbar).toString();

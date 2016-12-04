@@ -19,7 +19,7 @@ public class Hardware extends DataType {
     public static long zuletztGeaendertGeraeteListe;
 
     private int mId;
-    private long mSeriennummer;
+    private String mSeriennummer;
     private String mBeschreibung;
     private String mBemerkung;
     private Object mVerliehenAn;
@@ -62,7 +62,7 @@ public class Hardware extends DataType {
     public static Hardware get(Context baseContext, int id){
         DbConnection dbc = DbConnection.connect(baseContext);
 
-        String query = baseContext.getResources().getString(R.string.query_Hardware_get).replace("%har_id%", Integer.toString(id));
+        String query = baseContext.getResources().getString(R.string.query_Hardware_getWithRef).replace("%har_id%", Integer.toString(id));
         ResultSet rs = dbc.Select(query);
 
         Hardware geraet = null;
@@ -84,7 +84,7 @@ public class Hardware extends DataType {
         Hardware geraet = new Hardware(baseContext);
         try {
             geraet.setmId(rs.getInt("har_id"));
-            geraet.setmSeriennummer(rs.getLong("har_seriennummer"));
+            geraet.setmSeriennummer(rs.getString("har_seriennummer"));
             geraet.setmBeschreibung(rs.getString("har_beschreibung"));
             geraet.setmBemerkung(rs.getString("har_bemerkung"));
             Object verliehenAn = null;
@@ -111,11 +111,11 @@ public class Hardware extends DataType {
         this.mId = mId;
     }
 
-    public long getmSeriennummer() {
+    public String getmSeriennummer() {
         return mSeriennummer;
     }
 
-    public void setmSeriennummer(long mSeriennummer) {
+    public void setmSeriennummer(String mSeriennummer) {
         this.mSeriennummer = mSeriennummer;
     }
 
