@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 30. Nov 2016 um 23:17
+-- Erstellungszeit: 04. Dez 2016 um 22:03
 -- Server-Version: 10.1.8-MariaDB
 -- PHP-Version: 5.6.14
 
@@ -58,15 +58,18 @@ INSERT INTO `hardware` (`har_id`, `har_seriennummer`, `har_beschreibung`, `har_b
 
 CREATE TABLE `historie` (
   `his_id` int(11) NOT NULL,
+  `his_hardware` int(11) NOT NULL,
   `his_verliehen_durch` int(11) NOT NULL,
-  `his_verliehen_an` int(11) NOT NULL,
+  `his_verliehen_an` int(11) DEFAULT NULL,
   `his_datum_verleih` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `his_datum_rueckgabe` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `his_kurs` int(11) NOT NULL
+  `his_datum_rueckgabe` timestamp NULL DEFAULT NULL,
+  `his_kurs` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- RELATIONEN DER TABELLE `historie`:
+--   `his_hardware`
+--       `hardware` -> `har_id`
 --   `his_kurs`
 --       `kurs` -> `kur_id`
 --   `his_verliehen_an`
@@ -74,6 +77,12 @@ CREATE TABLE `historie` (
 --   `his_verliehen_durch`
 --       `lehrer` -> `leh_id`
 --
+
+--
+-- Daten für Tabelle `historie`
+--
+
+
 
 -- --------------------------------------------------------
 
@@ -311,11 +320,7 @@ CREATE TABLE `schueler` (
 -- Daten für Tabelle `schueler`
 --
 
-INSERT INTO `schueler` (`sch_id`, `sch_name`, `sch_vorname`, `sch_kla_id`) VALUES
-(1, 'Brinkmann', 'Lukas', 1),
-(2, 'Lautenschläger', 'Alexander', 1),
-(3, 'Mustermann', 'Max', 5),
-(4, 'Schäfer', 'Dennis', 5);
+
 
 --
 -- Indizes der exportierten Tabellen
@@ -356,15 +361,20 @@ ALTER TABLE `schueler`
 --
 
 --
+-- AUTO_INCREMENT für Tabelle `historie`
+--
+ALTER TABLE `historie`
+  MODIFY `his_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
 -- AUTO_INCREMENT für Tabelle `kurs`
 --
 ALTER TABLE `kurs`
-  MODIFY `kur_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `kur_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT für Tabelle `schueler`
 --
 ALTER TABLE `schueler`
-  MODIFY `sch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `sch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
