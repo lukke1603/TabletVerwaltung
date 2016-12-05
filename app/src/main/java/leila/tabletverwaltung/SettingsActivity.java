@@ -1,7 +1,6 @@
 package leila.tabletverwaltung;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,15 +14,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.Map;
-import java.util.Set;
-
-import leila.tabletverwaltung.DataConnection.DbConnection;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -31,9 +26,9 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText etBenutzer;
     private EditText etPasswort;
 
-    private static String DEFAULT_URL = "www.ihreDomain.de/tablets";
+    private static String DEFAULT_URL = "www.ihreDomain.de";
 
-    private static String SP_PREFIX = "tabletverwaltung";
+    public static String SP_PREFIX = "tabletverwaltung";
     public static String SP_URL = SP_PREFIX+".url";
     public static String SP_BENUTZER = SP_PREFIX+".benutzer";
     public static String SP_PASSWORT = SP_PREFIX+".passwort";

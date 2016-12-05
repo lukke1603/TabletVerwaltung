@@ -100,7 +100,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/tvLehrer"
             android:id="@+id/tvLehrer"
             android:textColor="@color/buttonTextColor"
@@ -121,19 +120,22 @@
             android:layout_alignStart="@id/tvLehrer"
             android:layout_marginTop="20dp" />
 
-        
-        <TextView
+
+        <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/tvKlassenweise"
-            android:id="@+id/tvKlassenweise"
-            android:textColor="@color/buttonTextColor"
-            android:textSize="14dp"
-            android:textStyle="bold"
-            android:layout_alignBottom="@+id/sLehrer"
+            android:id="@+id/swKlassenweise"
+            android:checked="false"
+            android:layout_below="@+id/tvLehrer"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="70dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/white200"
+            android:textStyle="bold"
+            android:textSize="18dp" />
     </RelativeLayout>
     <include layout="@layout/loading_overlay"/>
 </RelativeLayout>

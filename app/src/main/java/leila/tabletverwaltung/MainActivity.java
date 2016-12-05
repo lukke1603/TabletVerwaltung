@@ -3,26 +3,26 @@ package leila.tabletverwaltung;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
-
-import java.security.Permission;
 import java.util.ArrayList;
-import java.util.jar.*;
 
 import leila.tabletverwaltung.Adapter.LehrerAdapter;
 import leila.tabletverwaltung.DataConnection.DbConnection;
@@ -36,10 +36,16 @@ public class MainActivity extends AppCompatActivity {
     private String passwort;
     private Intent nextIntent;
 
+    private static boolean klassenweiseAusgeben;
+
     private Spinner sLehrer;
+    private Switch swKlassenweise;
     private RelativeLayout rlGeraete;
     private RelativeLayout rlEinlesen;
     private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
+
+    private SharedPreferences sp;
+    private final static String SP_KLASSENWEISE = SettingsActivity.SP_PREFIX + ".klassenweise";
 
     private boolean isCheckingConnection = false;
     public static final int PERMISSION_REQUEST_CODE_CAMERA = 1;
@@ -57,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("ACTIVITY", "Mainactivity");
 
+        this.sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
         flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
     }
 
@@ -66,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         flLoading.setVisibility(View.VISIBLE);
+
+        if(!sp.contains(SP_KLASSENWEISE)){
+            initKlassenweiseAusgeben();
+        }
 
         boolean connectionIsValid = getIntent().getBooleanExtra("connectionIsValid", false);
         if(connectionIsValid) {
@@ -91,6 +103,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void initKlassenweiseAusgeben() {
+        SharedPreferences.Editor spEditor = sp.edit();
+        spEditor.putBoolean(SP_KLASSENWEISE, swKlassenweise.isChecked());
+        klassenweiseAusgeben = swKlassenweise.isChecked();
+        spEditor.commit();
+    }
+
 
     private void createMainActivity(){
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -98,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         sLehrer = (Spinner) findViewById(R.id.sLehrer);
         rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
         rlEinlesen = (RelativeLayout) findViewById(R.id.rlEinlesen);
+        swKlassenweise = (Switch) findViewById(R.id.swKlassenweise);
 
         final Activity currentActivity = this;
         rlEinlesen.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +148,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, GeraeteActivity.class);
                 startActivity(i);
+            }
+        });
+
+
+        swKlassenweise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                initKlassenweiseAusgeben();
             }
         });
 
