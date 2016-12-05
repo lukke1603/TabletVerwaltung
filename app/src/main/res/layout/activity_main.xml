@@ -92,7 +92,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:padding="30dp"
         android:layout_below="@+id/include"
         android:layout_alignParentLeft="true"
@@ -124,20 +124,18 @@
 
 
         <Switch
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/tvKlassenweise"
             android:id="@+id/swKlassenweise"
             android:checked="false"
-            android:layout_below="@+id/tvLehrer"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="70dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:textColor="@color/white200"
             android:textStyle="bold"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_below="@+id/sLehrer"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -150,7 +148,7 @@
             android:layout_below="@+id/swKlassenweise"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="20dp" />
 
         <Spinner
             android:layout_width="match_parent"

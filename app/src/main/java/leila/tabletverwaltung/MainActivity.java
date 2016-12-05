@@ -20,7 +20,10 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner sLehrer;
     private Spinner sKurs;
     private Switch swKlassenweise;
+    private TextView tvKurs;
     private RelativeLayout rlGeraete;
     private RelativeLayout rlEinlesen;
     private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
@@ -72,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         flLoading = (RelativeLayout)findViewById(R.id.progress_overlay);
         sLehrer = (Spinner) findViewById(R.id.sLehrer);
         sKurs = (Spinner) findViewById(R.id.spKlasse);
+        tvKurs = (TextView) findViewById(R.id.tvKurs);
         rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
         rlEinlesen = (RelativeLayout) findViewById(R.id.rlEinlesen);
         swKlassenweise = (Switch) findViewById(R.id.swKlassenweise);
@@ -179,9 +184,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setVisibilityOfKursSpinner() {
         if(MainActivity.klassenweiseAusgeben){
-            swKlassenweise.setVisibility(View.VISIBLE);
+            sKurs.setVisibility(View.VISIBLE);
+            tvKurs.setVisibility(View.VISIBLE);
         }else{
-            swKlassenweise.setVisibility(View.GONE);
+            sKurs.setVisibility(View.GONE);
+            tvKurs.setVisibility(View.GONE);
         }
     }
 
