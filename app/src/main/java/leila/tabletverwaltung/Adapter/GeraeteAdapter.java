@@ -57,11 +57,16 @@ public class GeraeteAdapter extends BaseAdapter {
         tvBeschreibung.setText(geraet.getmBeschreibung());
 
         String verliehenAn = context.getResources().getText(R.string.geraete_verfuegbar).toString();
-        if(geraet.getmVerliehenAn() instanceof Schueler){
-            verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Schueler) geraet.getmVerliehenAn()).getVorname() + " " + ((Schueler) geraet.getmVerliehenAn()).getName();
-        }else if(geraet.getmVerliehenAn() instanceof Kurs){
-            verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Kurs) geraet.getmVerliehenAn()).getKursName();
+        if(geraet.getmDatumRueckgabe() == null){
+            if(geraet.getmVerliehenAn() instanceof Schueler){
+                verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Schueler) geraet.getmVerliehenAn()).getVorname() + " " + ((Schueler) geraet.getmVerliehenAn()).getName();
+            }else if(geraet.getmVerliehenAn() instanceof Kurs){
+                verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Kurs) geraet.getmVerliehenAn()).getKursName();
+            }
+        }else{
+            verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix).toString();
         }
+
 
         tvVerliehen.setText(verliehenAn);
         convertView.setTag(geraet.getmId());

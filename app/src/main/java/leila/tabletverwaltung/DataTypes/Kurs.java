@@ -46,7 +46,7 @@ public class Kurs extends DataType {
                 e.printStackTrace();
             }
 
-            dbc.disconnect();
+//            dbc.disconnect();
             return Kurs.kursListe;
         }else{
             return Kurs.kursListe;
@@ -69,7 +69,7 @@ public class Kurs extends DataType {
             e.printStackTrace();
         }
 
-        dbc.disconnect();
+//        dbc.disconnect();
         return kurs;
     }
 

@@ -53,7 +53,8 @@ public class Utility {
                 if(Utility.dbParametersValid(baseContext)) {
                     DbConnection con = null;
                     try {
-                        con = DbConnection.connect(baseContext);
+                        con = DbConnection.connect(baseContext, true);
+                        Log.i("BOOLEAN", ""+con.isValid());
                         if(con.isValid()){
                             isValid = true;
                         }
@@ -61,7 +62,7 @@ public class Utility {
                         e.printStackTrace();
                     }finally {
                         if(con != null){
-                            con.disconnect();
+//                            con.disconnect();
                         }
                     }
                 }

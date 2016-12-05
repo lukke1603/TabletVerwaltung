@@ -63,7 +63,7 @@ public class Historie extends DataType {
                 e.printStackTrace();
             }
 
-            dbc.disconnect();
+//            dbc.disconnect();
             return Historie.eintraege;
         }else{
             return Historie.eintraege;
@@ -91,7 +91,7 @@ public class Historie extends DataType {
                 e.printStackTrace();
             }
 
-            dbc.disconnect();
+//            dbc.disconnect();
             return Historie.eintraege;
         }else{
             return Historie.eintraege;

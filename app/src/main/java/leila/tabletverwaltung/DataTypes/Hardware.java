@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import leila.tabletverwaltung.DataConnection.DbConnection;
@@ -23,6 +24,7 @@ public class Hardware extends DataType {
     private String mBeschreibung;
     private String mBemerkung;
     private Object mVerliehenAn;
+    private Timestamp mDatumRueckgabe;
 
 
     public Hardware(Context context) {
@@ -50,7 +52,7 @@ public class Hardware extends DataType {
                 e.printStackTrace();
             }
 
-            dbc.disconnect();
+//            dbc.disconnect();
             return Hardware.geraeteListe;
         }else{
             return Hardware.geraeteListe;
@@ -74,7 +76,7 @@ public class Hardware extends DataType {
             e.printStackTrace();
         }
 
-        dbc.disconnect();
+//        dbc.disconnect();
         return geraet;
     }
 
@@ -87,6 +89,7 @@ public class Hardware extends DataType {
             geraet.setmSeriennummer(rs.getString("har_seriennummer"));
             geraet.setmBeschreibung(rs.getString("har_beschreibung"));
             geraet.setmBemerkung(rs.getString("har_bemerkung"));
+            geraet.setmDatumRueckgabe(rs.getTimestamp("his_datum_rueckgabe"));
             Object verliehenAn = null;
             if(rs.getInt("sch_id") != 0){       //  Ausgeliehen an einen Schüler
                 verliehenAn = Schueler.get(baseContext, rs.getInt("sch_id"));
@@ -141,5 +144,13 @@ public class Hardware extends DataType {
 
     public void setmVerliehenAn(Object mVerliehenAn) {
         this.mVerliehenAn = mVerliehenAn;
+    }
+
+    public Timestamp getmDatumRueckgabe() {
+        return mDatumRueckgabe;
+    }
+
+    public void setmDatumRueckgabe(Timestamp mDatumRueckgabe) {
+        this.mDatumRueckgabe = mDatumRueckgabe;
     }
 }

@@ -46,7 +46,7 @@ public class Lehrer extends Person {
                 e.printStackTrace();
             }
 
-            dbc.disconnect();
+//            dbc.disconnect();
             return Lehrer.lehrerListe;
         }else{
             return Lehrer.lehrerListe;
@@ -70,7 +70,7 @@ public class Lehrer extends Person {
             e.printStackTrace();
         }
 
-        dbc.disconnect();
+//        dbc.disconnect();
         return lehrer;
     }
 
