@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import leila.tabletverwaltung.DataConnection.DbConnection;
+import leila.tabletverwaltung.DataTypes.Hardware;
+import leila.tabletverwaltung.DataTypes.Lehrer;
 
 /**
  * Created by Lukas Brinkmann on 30.11.2016.
@@ -74,6 +76,17 @@ public class Utility {
                 activity.runOnUiThread(callback);
             }
         }).start();
+    }
+
+
+    public static void initApplicationData(Context baseContext){
+//        if(Lehrer.lehrerListe == null){
+//            Lehrer.getAll(baseContext);
+//        }
+//
+//        if(Hardware.geraeteListe == null){
+//            Hardware.getAll(baseContext);
+//        }
     }
 
 
