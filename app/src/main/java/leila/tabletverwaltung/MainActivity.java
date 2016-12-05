@@ -24,8 +24,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import leila.tabletverwaltung.Adapter.KursAdapter;
 import leila.tabletverwaltung.Adapter.LehrerAdapter;
 import leila.tabletverwaltung.DataConnection.DbConnection;
+import leila.tabletverwaltung.DataTypes.Kurs;
 import leila.tabletverwaltung.DataTypes.Lehrer;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private static boolean klassenweiseAusgeben;
 
     private Spinner sLehrer;
+    private Spinner sKurs;
     private Switch swKlassenweise;
     private RelativeLayout rlGeraete;
     private RelativeLayout rlEinlesen;
     private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
+    private static ArrayList<Kurs> kurse = new ArrayList<Kurs>();
 
     private SharedPreferences sp;
     private final static String SP_KLASSENWEISE = SettingsActivity.SP_PREFIX + ".klassenweise";
@@ -65,7 +69,16 @@ public class MainActivity extends AppCompatActivity {
 
         this.sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
+        flLoading = (RelativeLayout)findViewById(R.id.progress_overlay);
+        sLehrer = (Spinner) findViewById(R.id.sLehrer);
+        sKurs = (Spinner) findViewById(R.id.spKlasse);
+        rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
+        rlEinlesen = (RelativeLayout) findViewById(R.id.rlEinlesen);
+        swKlassenweise = (Switch) findViewById(R.id.swKlassenweise);
+
+        Log.i("LOADING", "here");
+        Log.i("LOADING", flLoading.toString());
+
     }
 
 
@@ -78,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         if(!sp.contains(SP_KLASSENWEISE)){
             initKlassenweiseAusgeben();
         }
+
+        setVisibilityOfKursSpinner();
 
         boolean connectionIsValid = getIntent().getBooleanExtra("connectionIsValid", false);
         if(connectionIsValid) {
@@ -111,13 +126,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     private void createMainActivity(){
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        sLehrer = (Spinner) findViewById(R.id.sLehrer);
-        rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
-        rlEinlesen = (RelativeLayout) findViewById(R.id.rlEinlesen);
-        swKlassenweise = (Switch) findViewById(R.id.swKlassenweise);
+
 
         final Activity currentActivity = this;
         rlEinlesen.setOnClickListener(new View.OnClickListener() {
@@ -156,10 +169,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 initKlassenweiseAusgeben();
+                setVisibilityOfKursSpinner();
             }
         });
 
-        initSpinnerLehrer();
+        initSpinner();
+
+    }
+
+    private void setVisibilityOfKursSpinner() {
+        if(MainActivity.klassenweiseAusgeben){
+            swKlassenweise.setVisibility(View.VISIBLE);
+        }else{
+            swKlassenweise.setVisibility(View.GONE);
+        }
     }
 
 
@@ -186,26 +209,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initSpinnerLehrer(){
+    private void initSpinner(){
         //  Färbt das Dreieck des Spinners weis
         sLehrer.getBackground().setColorFilter(getResources().getColor(R.color.white200), PorterDuff.Mode.SRC_ATOP);
+        sKurs.getBackground().setColorFilter(getResources().getColor(R.color.white200), PorterDuff.Mode.SRC_ATOP);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 MainActivity.lehrer = Lehrer.getAll(getBaseContext());
+                MainActivity.kurse = Kurs.getAll(getBaseContext());
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        LehrerAdapter adapter = new LehrerAdapter(getApplicationContext(), MainActivity.lehrer);
-                        sLehrer.setAdapter(adapter);
+                        LehrerAdapter lAdapter = new LehrerAdapter(getApplicationContext(), MainActivity.lehrer);
+                        sLehrer.setAdapter(lAdapter);
+
+                        KursAdapter kAdapter = new KursAdapter(getApplicationContext(), MainActivity.kurse);
+                        sKurs.setAdapter(kAdapter);
+
                         flLoading.setVisibility(View.GONE);
                     }
                 });
+
             }
         }).start();
     }
+
+
+
 
 
     @Override

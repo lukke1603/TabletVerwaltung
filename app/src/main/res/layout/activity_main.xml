@@ -10,10 +10,12 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="100dp"
-        android:baselineAligned="false">
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -21,7 +23,7 @@
             android:layout_weight="0.5"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="30dp"
             android:id="@+id/rlEinlesen">
 
@@ -57,7 +59,7 @@
             android:layout_weight="0.5"
             android:layout_marginRight="30dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="30dp"
             android:id="@+id/rlGeraete" >
 
@@ -91,11 +93,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="42dp"
         android:padding="30dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/include"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -136,6 +138,28 @@
             android:textColor="@color/white200"
             android:textStyle="bold"
             android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tvKurs"
+            android:id="@+id/tvKurs"
+            android:textColor="@color/buttonTextColor"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:layout_below="@+id/swKlassenweise"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spKlasse"
+            android:spinnerMode="dropdown"
+            android:layout_below="@+id/tvKurs"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
-    <include layout="@layout/loading_overlay"/>
+    <include layout="@layout/loading_overlay" android:id="@+id/progress_overlay" />
 </RelativeLayout>

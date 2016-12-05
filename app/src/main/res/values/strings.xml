@@ -5,6 +5,7 @@
     <string name="tvHistorie">Historie</string>
     <string name="tvEinstellungen">Einstellungen</string>
     <string name="tvLehrer">Lehrkraft</string>
+    <string name="tvKurs">Kurs</string>
     <string name="tvEinstellungenSpeichern">Speichern</string>
     <string name="alertEinstellungenSpeichernTitle">Änderungen speichern?</string>
     <string name="alertEinstellungenSpeichernMessage">Möchten Sie Ihre Änderungen speichern?</string>

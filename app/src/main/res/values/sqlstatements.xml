@@ -86,6 +86,8 @@
     </string>
 
 
+    <string name="query_Kurs_getAll">SELECT * FROM `kurs` ORDER BY `kur_name`</string>
+
 
     <string formatted="false" name="query_Historie_getAll">SELECT * FROM `historie` ORDER BY `his_datum_verleih` DESC</string>
     <string formatted="false" name="query_Historie_getAllWithRef">SELECT * FROM `historie` WHERE `his_hardware` = \'%his_hardware%\' ORDER BY `his_datum_verleih` DESC</string>
