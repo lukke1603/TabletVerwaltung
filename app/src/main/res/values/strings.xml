@@ -13,6 +13,8 @@
     <string name="etBenutzer">Benutzer</string>
     <string name="etPasswort">Passwort</string>
 
+    <string name="tvKlassenweise">Klassenweise ausgeben</string>
+
     <string name="toast_settings_datenbankverbindung_eintragen">Bitte tragen Sie alle notwendigen Daten ein, um zur Datenbank eine Verbindung herstellen zu können</string>
     <string name="toast_settings_datenbankverbindung_falsch">Verbindung zur Datenbank fehlgeschlagen</string>
     <string name="toast_settings_verbindung_fehlgeschlagen">Es konnte keine Verbindung zur Datenbank hergestellt werden</string>
