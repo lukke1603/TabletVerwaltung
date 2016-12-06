@@ -28,35 +28,75 @@
             `hardware`.`har_seriennummer`
     </string>
 
-    <string name="query_Hardware_getAllWithRef" >
+
+    <string name="query_Hardware_getAllWithRef">
         SELECT
             `hardware`.`har_id`,
             `hardware`.`har_seriennummer`,
             `hardware`.`har_beschreibung`,
             `hardware`.`har_bemerkung`,
-            `schueler`.`sch_id`,
-            `kurs`.`kur_id`,
-            MAX(`historie`.`his_datum_verleih`),
-            `historie`.`his_datum_rueckgabe`
+            (
+                SELECT
+                    `historie`.`his_verliehen_an`
+                FROM
+                    `historie`
+                WHERE
+                    `historie`.`his_datum_rueckgabe` is NULL AND
+                    `historie`.`his_hardware` = `hardware`.`har_id`
+            ) as `his_verliehen_an`,
+            (
+                SELECT
+                    `historie`.`his_kurs`
+                FROM
+                    `historie`
+                WHERE
+                    `historie`.`his_datum_rueckgabe` is NULL AND
+                    `historie`.`his_hardware` = `hardware`.`har_id`
+            ) as `his_kurs`,
+            (
+                SELECT
+                    `historie`.`his_datum_rueckgabe`
+                FROM
+                    `historie`
+                WHERE
+                    `historie`.`his_datum_rueckgabe` is NULL AND
+                    `historie`.`his_hardware` = `hardware`.`har_id`
+            ) as `his_datum_rueckgabe`
         FROM
             `hardware`
-        LEFT JOIN
-            `historie`
-        ON
-            `historie`.`his_hardware` = `hardware`.`har_id`
-        LEFT JOIN
-            `schueler`
-        ON
-            `schueler`.`sch_id` = `historie`.`his_verliehen_an`
-        LEFT JOIN
-            `kurs`
-        ON
-            `kurs`.`kur_id` = `historie`.`his_kurs`
-        GROUP BY
-        	`hardware`.`har_id`
         ORDER BY
             `hardware`.`har_seriennummer`
     </string>
+
+    <!--<string name="query_Hardware_getAllWithRef" >-->
+        <!--SELECT-->
+            <!--`hardware`.`har_id`,-->
+            <!--`hardware`.`har_seriennummer`,-->
+            <!--`hardware`.`har_beschreibung`,-->
+            <!--`hardware`.`har_bemerkung`,-->
+            <!--`schueler`.`sch_id`,-->
+            <!--`kurs`.`kur_id`,-->
+            <!--MAX(`historie`.`his_datum_verleih`) as `his_datum_verleih`,-->
+            <!--`historie`.`his_datum_rueckgabe`-->
+        <!--FROM-->
+            <!--`hardware`-->
+        <!--LEFT JOIN-->
+            <!--`historie`-->
+        <!--ON-->
+            <!--`historie`.`his_hardware` = `hardware`.`har_id`-->
+        <!--LEFT JOIN-->
+            <!--`schueler`-->
+        <!--ON-->
+            <!--`schueler`.`sch_id` = `historie`.`his_verliehen_an`-->
+        <!--LEFT JOIN-->
+            <!--`kurs`-->
+        <!--ON-->
+            <!--`kurs`.`kur_id` = `historie`.`his_kurs`-->
+        <!--GROUP BY-->
+        	<!--`hardware`.`har_id`-->
+        <!--ORDER BY-->
+            <!--`hardware`.`har_seriennummer`-->
+    <!--</string>-->
 
     <!--<string name="query_Hardware_getAllWithRef">-->
         <!--SELECT-->

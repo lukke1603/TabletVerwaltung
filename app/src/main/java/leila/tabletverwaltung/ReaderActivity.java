@@ -1,5 +1,6 @@
 package leila.tabletverwaltung;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -33,6 +34,10 @@ public class ReaderActivity extends AppCompatActivity {
     private CameraSource cameraSource;
     private BarcodeDetector barcodeDetector;
 
+
+    private int kursId;
+    private boolean klassenWeise;
+
     private static boolean barcodeDetected = false;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -46,6 +51,11 @@ public class ReaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent parseIntent = getIntent();
+        kursId = parseIntent.getIntExtra("kursId", 0);
+        klassenWeise = parseIntent.getBooleanExtra("klassenweiseAusgeben", false);
+
 
         tvBarcodeResult = (TextView) findViewById(R.id.tvBarcodeResult);
         ivBorder = (ImageView) findViewById(R.id.ivBorder);
@@ -149,10 +159,14 @@ public class ReaderActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        tvBarcodeResult.setText(barcodes.valueAt(0).displayValue);
+                                        String seriennummer = barcodes.valueAt(0).displayValue;
+
+                                        tvBarcodeResult.setText(seriennummer);
                                         ivBorder.setImageResource(R.drawable.barcode_border_box_green);
                                         Vibrator v = (Vibrator) ReaderActivity.this.getSystemService(VIBRATOR_SERVICE);
                                         v.vibrate(500);
+
+                                        validateBarcode(seriennummer);
                                     }
                                 });
                             }
@@ -179,6 +193,16 @@ public class ReaderActivity extends AppCompatActivity {
                 cameraSource.stop();
             }
         });
+    }
+
+    private void validateBarcode(String barcode){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
     }
 
 

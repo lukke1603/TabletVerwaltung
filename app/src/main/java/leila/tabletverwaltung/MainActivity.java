@@ -23,8 +23,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import leila.tabletverwaltung.Adapter.KursAdapter;
@@ -151,11 +149,15 @@ public class MainActivity extends AppCompatActivity {
                     else {
                         // Permission granted (user already accepted).
                         Intent i = new Intent(MainActivity.this, ReaderActivity.class);
+                        i.putExtra("klassenweiseAusgeben", klassenweiseAusgeben);
+                        i.putExtra("klasse", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
                         startActivity(i);
                     }
                 } else {
                     // Permission granted (because no runtime permission).
                     Intent i = new Intent(MainActivity.this, ReaderActivity.class);
+                    i.putExtra("klassenweiseAusgeben", klassenweiseAusgeben);
+                    i.putExtra("klasse", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
                     startActivity(i);
                 }
             }

@@ -1,7 +1,6 @@
 package leila.tabletverwaltung.DataTypes;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,8 +43,10 @@ public class Hardware extends DataType {
 
             try {
                 Hardware.geraeteListe = new ArrayList<Hardware>();
-                while(rs.next()){
-                    Hardware.geraeteListe.add(Hardware.createFromResult(baseContext, rs));
+                if(rs != null){
+                    while(rs.next()){
+                        Hardware.geraeteListe.add(Hardware.createFromResult(baseContext, rs));
+                    }
                 }
                 Hardware.zuletztGeaendertGeraeteListe = System.currentTimeMillis() / (1000 * 1000);
             } catch (SQLException e) {
