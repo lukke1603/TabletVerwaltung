@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 04. Dez 2016 um 22:03
+-- Erstellungszeit: 06. Dez 2016 um 23:02
 -- Server-Version: 10.1.8-MariaDB
 -- PHP-Version: 5.6.14
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `hardware` (
   `har_id` int(11) NOT NULL,
   `har_seriennummer` varchar(50) NOT NULL,
+  `har_barcode` varchar(16) NOT NULL,
   `har_beschreibung` varchar(128) DEFAULT NULL,
   `har_bemerkung` varchar(512) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -41,14 +42,14 @@ CREATE TABLE `hardware` (
 -- Daten für Tabelle `hardware`
 --
 
-INSERT INTO `hardware` (`har_id`, `har_seriennummer`, `har_beschreibung`, `har_bemerkung`) VALUES
-(1701, '010949553352', 'Surface 10', ''),
-(1703, '031392352652', 'Surface 10', ''),
-(1704, '010435160852', 'Surface 10', ''),
-(1705, '010518660852', 'Surface 10', ''),
-(1706, '010239653252', 'Surface 10', ''),
-(1707, '009268354852', 'Surface 10', ''),
-(1708, '010727460852', 'Surface 10', '');
+INSERT INTO `hardware` (`har_id`, `har_seriennummer`, `har_barcode`, `har_beschreibung`, `har_bemerkung`) VALUES
+(1701, '010949553352', '00017084', 'Surface 10', ''),
+(1703, '031392352652', '', 'Surface 10', ''),
+(1704, '010435160852', '', 'Surface 10', ''),
+(1705, '010518660852', '', 'Surface 10', ''),
+(1706, '010239653252', '', 'Surface 10', ''),
+(1707, '009268354852', '', 'Surface 10', ''),
+(1708, '010727460852', '', 'Surface 10', '');
 
 -- --------------------------------------------------------
 
@@ -82,7 +83,10 @@ CREATE TABLE `historie` (
 -- Daten für Tabelle `historie`
 --
 
-
+INSERT INTO `historie` (`his_id`, `his_hardware`, `his_verliehen_durch`, `his_verliehen_an`, `his_datum_verleih`, `his_datum_rueckgabe`, `his_kurs`) VALUES
+(6, 1701, 1, 1, '2016-11-30 23:00:00', '2016-12-01 23:00:00', NULL),
+(7, 1701, 1, 1, '2016-12-06 19:36:06', '2016-12-06 20:00:00', NULL),
+(8, 1701, 2, 1, '2016-12-06 19:36:20', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -320,7 +324,11 @@ CREATE TABLE `schueler` (
 -- Daten für Tabelle `schueler`
 --
 
-
+INSERT INTO `schueler` (`sch_id`, `sch_name`, `sch_vorname`, `sch_kla_id`) VALUES
+(1, 'Brinkmann', 'Lukas', 1),
+(2, 'Lautenschläger', 'Alexander', 1),
+(3, 'Mustermann', 'Max', 5),
+(4, 'Schäfer', 'Dennis', 5);
 
 --
 -- Indizes der exportierten Tabellen
@@ -364,17 +372,17 @@ ALTER TABLE `schueler`
 -- AUTO_INCREMENT für Tabelle `historie`
 --
 ALTER TABLE `historie`
-  MODIFY `his_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `his_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT für Tabelle `kurs`
 --
 ALTER TABLE `kurs`
-  MODIFY `kur_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `kur_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 --
 -- AUTO_INCREMENT für Tabelle `schueler`
 --
 ALTER TABLE `schueler`
-  MODIFY `sch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `sch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
