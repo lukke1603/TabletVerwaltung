@@ -1,6 +1,7 @@
 package leila.tabletverwaltung.DataTypes;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ public class Hardware extends DataType {
 
     private int mId;
     private String mSeriennummer;
+    private String mBarcode;
     private String mBeschreibung;
     private String mBemerkung;
     private Object mVerliehenAn;
@@ -82,6 +84,24 @@ public class Hardware extends DataType {
     }
 
 
+    public static Hardware getFromBarcode(Context baseContext, String barcode) {
+        DbConnection dbc = DbConnection.connect(baseContext);
+
+        String query = baseContext.getResources().getString(R.string.query_Hardware_getFromSeriennummer).replace("%har_barcode%", barcode);
+        ResultSet rs = dbc.Select(query);
+
+        Hardware geraet = null;
+        try {
+            if(rs.first()){
+                geraet = Hardware.createFromResult(baseContext, rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return geraet;
+    }
+
 
     public static Hardware createFromResult(Context baseContext, ResultSet rs){
         Hardware geraet = new Hardware(baseContext);
@@ -91,10 +111,14 @@ public class Hardware extends DataType {
             geraet.setmBeschreibung(rs.getString("har_beschreibung"));
             geraet.setmBemerkung(rs.getString("har_bemerkung"));
             geraet.setmDatumRueckgabe(rs.getTimestamp("his_datum_rueckgabe"));
+            geraet.setmBarcode(rs.getString("har_barcode"));
             Object verliehenAn = null;
-            if(rs.getInt("sch_id") != 0){       //  Ausgeliehen an einen Schüler
-                verliehenAn = Schueler.get(baseContext, rs.getInt("sch_id"));
-            }else if(rs.getInt("kur_id") != 0){ //  Ausgeliehen an eine Klasse
+
+//            Log.i("verliehen", rs.getString("his_verliehen_an"));
+
+            if(rs.getInt("his_verliehen_an") != 0){       //  Ausgeliehen an einen Schüler
+                verliehenAn = Schueler.get(baseContext, rs.getInt("his_verliehen_an"));
+            }else if(rs.getInt("his_kurs") != 0){ //  Ausgeliehen an eine Klasse
                 verliehenAn = null;
             }
 
@@ -106,6 +130,22 @@ public class Hardware extends DataType {
         return geraet;
     }
 
+    public boolean isVerliehen(){
+        if(mVerliehenAn != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    public String getmBarcode() {
+        return mBarcode;
+    }
+
+    public void setmBarcode(String mBarcode) {
+        this.mBarcode = mBarcode;
+    }
 
     public int getmId() {
         return mId;
@@ -154,4 +194,6 @@ public class Hardware extends DataType {
     public void setmDatumRueckgabe(Timestamp mDatumRueckgabe) {
         this.mDatumRueckgabe = mDatumRueckgabe;
     }
+
+
 }

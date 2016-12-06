@@ -33,4 +33,10 @@
     <string name="tvLoading">LÄDT...</string>
 
 
+    <string name="alertReaderBereitsVerliehenTitle">Gerät bereits verliehen</string>
+    <string name="alertReaderBereitsVerliehenMessage">Das gescannte Gerät ist bereits verliehen. Möchten Sie es weiterverleihen?</string>
+    <string name="alertReaderBereitsVerliehenPositiveButton">Ja</string>
+    <string name="alertReaderBereitsVerliehenNegativeButton">Nein</string>
+
+
 </resources>

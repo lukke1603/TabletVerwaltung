@@ -1,5 +1,7 @@
 package leila.tabletverwaltung;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
@@ -7,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
@@ -26,6 +29,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+import leila.tabletverwaltung.DataTypes.Hardware;
+
 
 public class ReaderActivity extends AppCompatActivity {
     private ImageView ivBorder;
@@ -34,6 +39,7 @@ public class ReaderActivity extends AppCompatActivity {
     private CameraSource cameraSource;
     private BarcodeDetector barcodeDetector;
 
+    private AlertDialog dialog;
 
     private int kursId;
     private boolean klassenWeise;
@@ -56,15 +62,23 @@ public class ReaderActivity extends AppCompatActivity {
         kursId = parseIntent.getIntExtra("kursId", 0);
         klassenWeise = parseIntent.getBooleanExtra("klassenweiseAusgeben", false);
 
+        Log.e("READER", "CREATE");
+
+
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         tvBarcodeResult = (TextView) findViewById(R.id.tvBarcodeResult);
         ivBorder = (ImageView) findViewById(R.id.ivBorder);
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
 
+        barcodeDetected = false;
+
+        tvBarcodeResult.setText("");
+        ivBorder.setImageResource(R.drawable.barcode_border_box_white);
+
+
         initCamera();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
 
@@ -84,19 +98,33 @@ public class ReaderActivity extends AppCompatActivity {
                 Uri.parse("android-app://leila.tabletverwaltung/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
-        Log.e("ACTION", "PAUSE");
+        Log.e("READER", "PAUSE");
+        client.disconnect();
         cameraSource.stop();
+
+        dialog.cancel();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.disconnect();
+
+//        barcodeDetected = false;
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("ACTION", "RESUME");
-        initCamera();
+        Log.e("READER", "RESUME");
+
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+
+        barcodeDetected = false;
+
+        tvBarcodeResult.setText("");
+        ivBorder.setImageResource(R.drawable.barcode_border_box_white);
+
+//        initCamera();
     }
 
 
@@ -129,7 +157,53 @@ public class ReaderActivity extends AppCompatActivity {
 
 
     private void initCamera() {
-        cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
+        cameraView.getHolder().addCallback(getHolderCallback());
+    }
+
+    private void validateBarcode(final String barcode){
+        Log.i("BARCODE", barcode);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Hardware geraet = Hardware.getFromBarcode(getBaseContext(), barcode);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(geraet != null){
+                            Log.i("GERAET", "here");
+                            if(geraet.isVerliehen()){
+                                Log.i("GERAET VERLIEHEN", "here");
+                                dialog = new AlertDialog.Builder(ReaderActivity.this, R.style.AlertDialog)
+                                        .setTitle(R.string.alertReaderBereitsVerliehenTitle)
+                                        .setMessage(R.string.alertReaderBereitsVerliehenMessage)
+                                        .setPositiveButton(R.string.alertReaderBereitsVerliehenPositiveButton, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.alertReaderBereitsVerliehenNegativeButton, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                onResume();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            }
+                        }
+                    }
+                });
+
+            }
+        }).start();
+
+    }
+
+
+    public SurfaceHolder.Callback getHolderCallback() {
+        return new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
@@ -153,8 +227,6 @@ public class ReaderActivity extends AppCompatActivity {
 
                             //  Barcode wurde erkannt
                             if (barcodes.size() != 0) {
-                                Log.e("BARCODE", barcodes.valueAt(0).displayValue);
-
                                 barcodeDetected = true;
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -174,7 +246,7 @@ public class ReaderActivity extends AppCompatActivity {
                     });
 
                     if (ActivityCompat.checkSelfPermission(ReaderActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                       return;
+                        return;
                     }
                     cameraSource.start(cameraView.getHolder());
                     cameraFocus(cameraSource, Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
@@ -192,18 +264,6 @@ public class ReaderActivity extends AppCompatActivity {
             public void surfaceDestroyed(SurfaceHolder holder) {
                 cameraSource.stop();
             }
-        });
+        };
     }
-
-    private void validateBarcode(String barcode){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-
-    }
-
-
 }
