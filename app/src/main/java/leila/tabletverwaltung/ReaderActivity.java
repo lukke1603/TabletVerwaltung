@@ -17,6 +17,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -28,8 +29,12 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import leila.tabletverwaltung.DataTypes.Hardware;
+import leila.tabletverwaltung.DataTypes.Historie;
+import leila.tabletverwaltung.DataTypes.Kurs;
+import leila.tabletverwaltung.DataTypes.Schueler;
 
 
 public class ReaderActivity extends AppCompatActivity {
@@ -42,7 +47,9 @@ public class ReaderActivity extends AppCompatActivity {
     private AlertDialog dialog;
 
     private int kursId;
+    private int lehrerId;
     private boolean klassenWeise;
+
 
     private static boolean barcodeDetected = false;
     /**
@@ -59,7 +66,8 @@ public class ReaderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent parseIntent = getIntent();
-        kursId = parseIntent.getIntExtra("kursId", 0);
+        kursId = parseIntent.getIntExtra("kurs", 0);
+        lehrerId = parseIntent.getIntExtra("lehrer", 0);
         klassenWeise = parseIntent.getBooleanExtra("klassenweiseAusgeben", false);
 
         Log.e("READER", "CREATE");
@@ -102,7 +110,7 @@ public class ReaderActivity extends AppCompatActivity {
         client.disconnect();
         cameraSource.stop();
 
-        dialog.cancel();
+        if(dialog != null) dialog.cancel();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
 
@@ -172,7 +180,8 @@ public class ReaderActivity extends AppCompatActivity {
                     public void run() {
                         if(geraet != null){
                             Log.i("GERAET", "here");
-                            if(geraet.isVerliehen()){
+                            Log.i("VERLIEHEN", (geraet.isVerliehen()) ? "true" : "false");
+                            if(geraet.isVerliehen()){       //  Gerät ist bereits verliehen
                                 Log.i("GERAET VERLIEHEN", "here");
                                 dialog = new AlertDialog.Builder(ReaderActivity.this, R.style.AlertDialog)
                                         .setTitle(R.string.alertReaderBereitsVerliehenTitle)
@@ -180,18 +189,85 @@ public class ReaderActivity extends AppCompatActivity {
                                         .setPositiveButton(R.string.alertReaderBereitsVerliehenPositiveButton, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                if(klassenWeise){
+                                                    Log.i("KURS", Integer.toString(kursId));
+                                                    verleiheAnKlasse(geraet, kursId, lehrerId);
+                                                }else{
+//                                                    new Thread(new Runnable() {
+//                                                        @Override
+//                                                        public void run() {
+//                                                            final ArrayList<Schueler> schueler = Schueler.getAllFromKurs(getBaseContext(), kursId);
+//                                                            AlertDialog.Builder dialogInner = new AlertDialog.Builder(ReaderActivity.this, R.style.AlertDialog)
+//                                                                    .setTitle(R.string.alertReaderAnSchuelerAusgebenTitle)
+//                                                                    .setItems()
+//
+//                                                        }
+//                                                    })
 
+
+                                                }
                                             }
                                         })
                                         .setNegativeButton(R.string.alertReaderBereitsVerliehenNegativeButton, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                onResume();
+                                                geraetZurueckgeben(geraet);
                                             }
                                         })
                                         .setIcon(android.R.drawable.ic_dialog_alert)
                                         .show();
+                            }else{
+                                Log.i("GERAET VERFÜGBAR", "here");
+
+                                if(klassenWeise){       //  Gerät wird an Klasse ausgegeben
+
+                                    Log.i("KURS", Integer.toString(kursId));
+
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            final Kurs kurs = Kurs.get(getBaseContext(), kursId);
+
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if(kurs != null){
+                                                        String title = getResources().getString(R.string.alertReaderAnKlasseAusgebenTitle).replace("%kur_name%", kurs.getKursName());
+                                                        String message = getResources().getString(R.string.alertReaderAnKlasseAusgebenMessage).replace("%kur_name%", kurs.getKursName());
+
+                                                        dialog = new AlertDialog.Builder(ReaderActivity.this, R.style.AlertDialog)
+                                                                .setTitle(title)
+                                                                .setMessage(message)
+                                                                .setPositiveButton(R.string.alertReaderAnKlasseAusgebenPositiveButton, new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        verleiheAnKlasse(geraet, kurs.getKursId(), lehrerId);
+                                                                        onResume();
+                                                                    }
+                                                                })
+                                                                .setNegativeButton(R.string.alertReaderAnKlasseAusgebenNegativeButton, new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        onResume();
+                                                                    }
+                                                                })
+                                                                .show();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }).start();
+
+
+
+
+                                }else{
+
+                                }
+
                             }
+                        }else{
+                            onResume();
                         }
                     }
                 });
@@ -199,6 +275,41 @@ public class ReaderActivity extends AppCompatActivity {
             }
         }).start();
 
+    }
+
+    private void geraetZurueckgeben(final Hardware geraet) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Historie.geraetZurueckgeben(getBaseContext(), geraet.getmId());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.toast_geraet_zuruecknehmen, Toast.LENGTH_SHORT).show();
+                        onResume();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void verleiheAnKlasse(final Hardware geraet, final int kursId, final int lehrerId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Kurs kurs = Kurs.get(getBaseContext(), kursId);
+                Historie.setVerliehenAnKurs(getBaseContext(),kursId,lehrerId,geraet.getmId());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.toast_geraet_verliehen, Toast.LENGTH_SHORT).show();
+                        onResume();
+                    }
+                });
+            }
+        }).start();
     }
 
 

@@ -103,6 +103,9 @@ public class Hardware extends DataType {
     }
 
 
+
+
+
     public static Hardware createFromResult(Context baseContext, ResultSet rs){
         Hardware geraet = new Hardware(baseContext);
         try {
@@ -119,7 +122,7 @@ public class Hardware extends DataType {
             if(rs.getInt("his_verliehen_an") != 0){       //  Ausgeliehen an einen Schüler
                 verliehenAn = Schueler.get(baseContext, rs.getInt("his_verliehen_an"));
             }else if(rs.getInt("his_kurs") != 0){ //  Ausgeliehen an eine Klasse
-                verliehenAn = null;
+                verliehenAn = Kurs.get(baseContext, rs.getInt("his_kurs"));
             }
 
             geraet.setmVerliehenAn(verliehenAn);

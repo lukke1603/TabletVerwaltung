@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -129,6 +130,36 @@ public class Historie extends DataType {
         }
 
         return eintrag;
+    }
+
+
+    public static void geraetZurueckgeben(Context baseContext, int hardware){
+        DbConnection dbc = DbConnection.connect(baseContext);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date datumRueckgabe = new Date();
+        String queryUpdate = baseContext.getResources().getString(R.string.query_Historie_rueckgabe);
+        queryUpdate = queryUpdate.replace("%his_datum_rueckgabe%", format.format(datumRueckgabe))
+                .replace("%his_hardware%", Integer.toString(hardware));
+        Log.i("QUERY", queryUpdate);
+        dbc.Update(queryUpdate);
+    }
+
+
+    public static void setVerliehenAnKurs(Context baseContext, int kurs, int lehrer, int hardware){
+        geraetZurueckgeben(baseContext, hardware);
+
+        DbConnection dbc = DbConnection.connect(baseContext);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date datumVerleih = new Date();
+        String queryInsert = baseContext.getResources().getString(R.string.query_Historie_setVerliehenAnKurs);
+        queryInsert = queryInsert.replace("%his_hardware%", Integer.toString(hardware))
+                .replace("%his_kurs%", Integer.toString(kurs))
+                .replace("%his_verliehen_durch%", Integer.toString(lehrer))
+                .replace("%his_datum_verleih%", format.format(datumVerleih));
+
+        dbc.Insert(queryInsert);
     }
 
 

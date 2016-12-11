@@ -150,14 +150,16 @@ public class MainActivity extends AppCompatActivity {
                         // Permission granted (user already accepted).
                         Intent i = new Intent(MainActivity.this, ReaderActivity.class);
                         i.putExtra("klassenweiseAusgeben", klassenweiseAusgeben);
-                        i.putExtra("klasse", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
+                        i.putExtra("lehrer", lehrer.get(sLehrer.getSelectedItemPosition()).getId());
+                        i.putExtra("kurs", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
                         startActivity(i);
                     }
                 } else {
                     // Permission granted (because no runtime permission).
                     Intent i = new Intent(MainActivity.this, ReaderActivity.class);
                     i.putExtra("klassenweiseAusgeben", klassenweiseAusgeben);
-                    i.putExtra("klasse", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
+                    i.putExtra("lehrer", lehrer.get(sLehrer.getSelectedItemPosition()).getId());
+                    i.putExtra("kurs", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
                     startActivity(i);
                 }
             }

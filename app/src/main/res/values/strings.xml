@@ -34,9 +34,20 @@
 
 
     <string name="alertReaderBereitsVerliehenTitle">Gerät bereits verliehen</string>
-    <string name="alertReaderBereitsVerliehenMessage">Das gescannte Gerät ist bereits verliehen. Möchten Sie es weiterverleihen?</string>
-    <string name="alertReaderBereitsVerliehenPositiveButton">Ja</string>
-    <string name="alertReaderBereitsVerliehenNegativeButton">Nein</string>
+    <string name="alertReaderBereitsVerliehenMessage">Das gescannte Gerät ist bereits verliehen. Möchten Sie es weiterverleihen oder zurücknehmen?</string>
+    <string name="alertReaderBereitsVerliehenPositiveButton">verleihen</string>
+    <string name="alertReaderBereitsVerliehenNegativeButton">zurücknehmen</string>
+
+    <string name="alertReaderAnKlasseAusgebenTitle">Gerät an %kur_name% ausgeben?</string>
+    <string name="alertReaderAnKlasseAusgebenMessage">Möchten Sie das Gerät an den Kurs "%kur_name%" ausgeben?</string>
+    <string name="alertReaderAnKlasseAusgebenPositiveButton">Ja</string>
+    <string name="alertReaderAnKlasseAusgebenNegativeButton">Nein</string>
+
+    <string name="alertReaderAnSchuelerAusgebenTitle">Wählen Sie einen Schüler</string>
+
+    <string name="toast_geraet_verliehen">Das Gerät wurde erfolgreich verliehen</string>
+    <string name="toast_geraet_verliehen_fehler">Beim Verleihen trat ein Fehler auf</string>
+    <string name="toast_geraet_zuruecknehmen">Das Gerät wurde erfolreich zurückgenommen</string>
 
 
 </resources>

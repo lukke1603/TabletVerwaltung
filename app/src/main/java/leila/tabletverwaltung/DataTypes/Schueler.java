@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import leila.tabletverwaltung.DataConnection.DbConnection;
 import leila.tabletverwaltung.R;
@@ -55,6 +56,26 @@ public class Schueler extends Person {
                     rs.getString("sch_name"),
                     rs.getString("sch_vorname"),
                     rs.getInt("sch_kla_id"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return schueler;
+    }
+
+    public static ArrayList<Schueler> getAllFromKurs(Context baseContext, int kursId) {
+        ArrayList<Schueler> schueler = new ArrayList<Schueler>();
+
+        DbConnection dbc = DbConnection.connect(baseContext);
+        String query = baseContext.getResources().getString(R.string.query_Schueler_getAllFromKurs);
+        query = query.replace("%sch_kla_id%", Integer.toString(kursId));
+
+        ResultSet rs = dbc.Select(query);
+        try {
+            while(rs.next()){
+                Schueler eintrag = Schueler.createFromResult(baseContext, rs);
+                schueler.add(eintrag);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

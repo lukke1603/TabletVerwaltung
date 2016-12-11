@@ -243,6 +243,45 @@
             <!--`hardware`.`har_seriennummer`-->
     <!--</string>-->
 
+    <string formatted="false" name="query_Historie_setVerliehenAnKurs">
+        INSERT INTO
+            `historie`(
+                `his_hardware`,
+                `his_verliehen_durch`,
+                `his_verliehen_an`,
+                `his_datum_verleih`,
+                `his_datum_rueckgabe`,
+                `his_kurs`
+            )
+        VALUES(
+            \'%his_hardware%\',
+            \'%his_verliehen_durch%\',
+            NULL,
+            \'%his_datum_verleih%\',
+            NULL,
+            \'%his_kurs%\'
+        )
+    </string>
+
+    <string formatted="false" name="query_Historie_rueckgabe">
+        UPDATE
+            `historie`
+        SET
+            `his_datum_rueckgabe`=\'%his_datum_rueckgabe%\'
+        WHERE
+            `his_hardware`=\'%his_hardware%\' AND
+            `his_datum_rueckgabe` IS NULL
+    </string>
+
+    <string formatted="false" name="query_Schueler_getAllFromKurs">
+        SELECT
+            *
+        FROM
+            `schueler`
+        WHERE
+            `sch_kla_id`=\'%sch_kla_id%\'
+    </string>
+
 
     <string name="query_Kurs_getAll">SELECT * FROM `kurs` ORDER BY `kur_name`</string>
 

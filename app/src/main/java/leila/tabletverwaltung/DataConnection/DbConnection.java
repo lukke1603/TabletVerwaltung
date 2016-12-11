@@ -87,6 +87,28 @@ public class DbConnection {
         return mStatement.execute(sql);
     }
 
+    public boolean Update(String sql){
+        boolean result = false;
+        try {
+            result = ExecuteStatement(sql);
+        }catch (SQLException exception){
+            exception.printStackTrace();
+        }finally {
+            return result;
+        }
+    }
+
+    public boolean Insert(String sql){
+        boolean result = false;
+        try {
+            result = ExecuteStatement(sql);
+        }catch (SQLException exception){
+            exception.printStackTrace();
+        }finally {
+            return result;
+        }
+    }
+
 
     public boolean isValid(){
         boolean result = false;
