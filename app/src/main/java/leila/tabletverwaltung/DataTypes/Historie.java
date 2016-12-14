@@ -146,6 +146,23 @@ public class Historie extends DataType {
     }
 
 
+    public static void setVerliehenAnSchueler(Context baseContext, int schueler, int lehrer, int hardware) {
+        geraetZurueckgeben(baseContext, hardware);
+
+        DbConnection dbc = DbConnection.connect(baseContext);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date datumVerleih = new Date();
+        String queryInsert = baseContext.getResources().getString(R.string.query_Historie_setVerliehenAnSchueler);
+        queryInsert = queryInsert.replace("%his_hardware%", Integer.toString(hardware))
+                .replace("%his_verliehen_an%", Integer.toString(schueler))
+                .replace("%his_verliehen_durch%", Integer.toString(lehrer))
+                .replace("%his_datum_verleih%", format.format(datumVerleih));
+
+        dbc.Insert(queryInsert);
+    }
+
+
     public static void setVerliehenAnKurs(Context baseContext, int kurs, int lehrer, int hardware){
         geraetZurueckgeben(baseContext, hardware);
 
@@ -218,4 +235,6 @@ public class Historie extends DataType {
     public void setmKurs(Kurs mKurs) {
         this.mKurs = mKurs;
     }
+
+
 }

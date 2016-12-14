@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import leila.tabletverwaltung.DataConnection.DbConnection;
 import leila.tabletverwaltung.R;
 
-/**
- * Created by a.moszczynski on 15.11.2016.
- */
+
 public class Hardware extends DataType {
 
     public static ArrayList<Hardware> geraeteListe;

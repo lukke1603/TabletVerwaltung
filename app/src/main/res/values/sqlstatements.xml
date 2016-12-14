@@ -263,6 +263,26 @@
         )
     </string>
 
+    <string formatted="false" name="query_Historie_setVerliehenAnSchueler">
+        INSERT INTO
+            `historie`(
+                `his_hardware`,
+                `his_verliehen_durch`,
+                `his_verliehen_an`,
+                `his_datum_verleih`,
+                `his_datum_rueckgabe`,
+                `his_kurs`
+            )
+        VALUES(
+            \'%his_hardware%\',
+            \'%his_verliehen_durch%\',
+            \'%his_verliehen_an%\',
+            \'%his_datum_verleih%\',
+            NULL,
+            NULL
+        )
+    </string>
+
     <string formatted="false" name="query_Historie_rueckgabe">
         UPDATE
             `historie`

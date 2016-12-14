@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private String passwort;
     private Intent nextIntent;
 
-    private static boolean klassenweiseAusgeben;
+
 
     private Spinner sLehrer;
     private Spinner sKurs;
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout rlEinlesen;
     private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
     private static ArrayList<Kurs> kurse = new ArrayList<Kurs>();
+
+    private static int selectedLehrerPos = 0;
+    private static int selectedKursPos = 0;
+    private static boolean klassenweiseAusgeben = false;
 
     private SharedPreferences sp;
     private final static String SP_KLASSENWEISE = SettingsActivity.SP_PREFIX + ".klassenweise";
@@ -91,11 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
         flLoading.setVisibility(View.VISIBLE);
 
-        if(!sp.contains(SP_KLASSENWEISE)){
-            initKlassenweiseAusgeben();
-        }
+        initKlassenweiseAusgeben();
 
-        setVisibilityOfKursSpinner();
 
         boolean connectionIsValid = getIntent().getBooleanExtra("connectionIsValid", false);
         if(connectionIsValid) {
@@ -122,10 +124,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initKlassenweiseAusgeben() {
-        SharedPreferences.Editor spEditor = sp.edit();
-        spEditor.putBoolean(SP_KLASSENWEISE, swKlassenweise.isChecked());
-        klassenweiseAusgeben = swKlassenweise.isChecked();
-        spEditor.commit();
+        swKlassenweise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                klassenweiseAusgeben = isChecked;
+                Log.i("CHANGE", (klassenweiseAusgeben) ? "true" : "false");
+            }
+        });
+
+        swKlassenweise.setChecked(klassenweiseAusgeben);
     }
 
 
@@ -173,17 +180,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        swKlassenweise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                initKlassenweiseAusgeben();
-                setVisibilityOfKursSpinner();
-            }
-        });
-
         initSpinner();
-
     }
 
     private void setVisibilityOfKursSpinner() {
@@ -236,9 +233,33 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         LehrerAdapter lAdapter = new LehrerAdapter(getApplicationContext(), MainActivity.lehrer);
                         sLehrer.setAdapter(lAdapter);
+                        sLehrer.setSelection(selectedLehrerPos);
+                        sLehrer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                selectedLehrerPos = position;
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
 
                         KursAdapter kAdapter = new KursAdapter(getApplicationContext(), MainActivity.kurse);
                         sKurs.setAdapter(kAdapter);
+                        sKurs.setSelection(selectedKursPos);
+                        sKurs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                selectedKursPos = position;
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
 
                         flLoading.setVisibility(View.GONE);
                     }

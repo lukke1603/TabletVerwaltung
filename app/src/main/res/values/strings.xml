@@ -43,6 +43,9 @@
     <string name="alertReaderAnKlasseAusgebenPositiveButton">Ja</string>
     <string name="alertReaderAnKlasseAusgebenNegativeButton">Nein</string>
 
+
+    <string name="alertReaderAusleihen">Ausleihen</string>
+    <string name="alertReaderAbbrechen">Abbrechen</string>
     <string name="alertReaderAnSchuelerAusgebenTitle">Wählen Sie einen Schüler</string>
 
     <string name="toast_geraet_verliehen">Das Gerät wurde erfolgreich verliehen</string>

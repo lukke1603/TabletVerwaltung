@@ -30,4 +30,6 @@
         android:textColor="#00ff00"
         android:textStyle="bold" />
 
+
+    <include layout="@layout/loading_overlay" android:id="@+id/progress_overlay" />
 </RelativeLayout>
