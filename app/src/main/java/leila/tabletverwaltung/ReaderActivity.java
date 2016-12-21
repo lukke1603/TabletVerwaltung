@@ -250,7 +250,7 @@ public class ReaderActivity extends AppCompatActivity {
                                                                 public void run() {
 
                                                                     View v = LayoutInflater.from(getBaseContext()).inflate(R.layout.dialog_spinner_schueler, null, false);
-                                                                    Spinner sp = (Spinner) v.findViewById(R.id.spSchueler);
+                                                                    final Spinner sp = (Spinner) v.findViewById(R.id.spSchueler);
 
                                                                     SchuelerAdapter sAdapter = new SchuelerAdapter(getBaseContext(), schueler);
                                                                     sp.setAdapter(sAdapter);
@@ -268,7 +268,7 @@ public class ReaderActivity extends AppCompatActivity {
                                                                             .setPositiveButton(R.string.alertReaderAusleihen, new DialogInterface.OnClickListener() {
                                                                                 @Override
                                                                                 public void onClick(DialogInterface dialog, int which) {
-
+                                                                                    verleiheAnSchueler(geraet, (Schueler)sp.getSelectedItem(), lehrerId);
                                                                                 }
                                                                             })
                                                                             .setNegativeButton(R.string.alertReaderAbbrechen, new DialogInterface.OnClickListener() {
