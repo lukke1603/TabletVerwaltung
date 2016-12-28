@@ -3,10 +3,8 @@ package leila.tabletverwaltung.DataTypes;
 import android.content.Context;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,7 +53,7 @@ public class Historie extends DataType {
             ResultSet rs = dbc.Select(query);
 
             try {
-                Historie.eintraege = new ArrayList<Historie>();
+                Historie.eintraege = new ArrayList<>();
                 while(rs.next()){
                     Historie.eintraege.add(Historie.createFromResult(baseContext, rs));
                 }
@@ -83,7 +81,7 @@ public class Historie extends DataType {
             ResultSet rs = dbc.Select(query);
 
             try {
-                Historie.eintraege = new ArrayList<Historie>();
+                Historie.eintraege = new ArrayList<>();
                 while(rs.next()){
                     Historie.eintraege.add(Historie.createFromResult(baseContext, rs));
                 }

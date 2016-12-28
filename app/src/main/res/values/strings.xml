@@ -15,7 +15,7 @@
     <string name="etBenutzer">Benutzer</string>
     <string name="etPasswort">Passwort</string>
 
-    <string name="tvKlassenweise">Klassenweise ausgeben</string>
+    <string name="tvKlassenweise">Kursweise ausgeben</string>
 
     <string name="tvVerliehen_prefix">Verliehen an:</string>
     <string name="tvVerliehenDurch_prefix">Ausgegeben von:</string>
@@ -30,7 +30,7 @@
     <string name="toast_settings_datenbankverbindung_falsch">Verbindung zur Datenbank fehlgeschlagen</string>
     <string name="toast_settings_verbindung_fehlgeschlagen">Es konnte keine Verbindung zur Datenbank hergestellt werden</string>
     <string name="background_for_loading_screen">Background for Loading screen</string>
-    <string name="tvLoading">LÄDT...</string>
+    <string name="tvLoading">LÄDT…</string>
 
 
     <string name="alertReaderBereitsVerliehenTitle">Gerät bereits verliehen</string>
@@ -48,9 +48,14 @@
     <string name="alertReaderAbbrechen">Abbrechen</string>
     <string name="alertReaderAnSchuelerAusgebenTitle">Wählen Sie einen Schüler</string>
 
+    <string name="alertReaderkeineSchuelerInKlasse">Der ausgewählte Kurs enthält keine Schüler</string>
+
     <string name="toast_geraet_verliehen">Das Gerät wurde erfolgreich verliehen</string>
     <string name="toast_geraet_verliehen_fehler">Beim Verleihen trat ein Fehler auf</string>
     <string name="toast_geraet_zuruecknehmen">Das Gerät wurde erfolreich zurückgenommen</string>
+    <string name="camera_image">Camera Image</string>
+    <string name="device_image">Camera Image</string>
+    <string name="border_box">Border Box</string>
 
 
 </resources>

@@ -314,4 +314,5 @@
 
     <string formatted="false" name="query_Schueler_get">SELECT * FROM `schueler` WHERE `sch_id` = \'%sch_id%\' </string>
     <string formatted="false" name="query_Kurs_get">SELECT * FROM `kurs` WHERE `kur_id` = \'%kur_id%\'</string>
+    <string formatted="false" name="query_Kurs_getSchuelerAnzahl">SELECT COUNT(`sch_id`) as `anzahl` FROM `schueler` WHERE `sch_kla_id` = \'%sch_kla_id%\'</string>
 </resources>

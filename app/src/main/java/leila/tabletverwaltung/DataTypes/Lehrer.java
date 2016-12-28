@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import leila.tabletverwaltung.DataConnection.DbConnection;
-import leila.tabletverwaltung.DataConnection.DbConnection_alt;
 import leila.tabletverwaltung.R;
 
 /**
@@ -37,7 +36,7 @@ public class Lehrer extends Person {
             ResultSet rs = dbc.Select(query);
 
             try {
-                Lehrer.lehrerListe = new ArrayList<Lehrer>();
+                Lehrer.lehrerListe = new ArrayList<>();
                 while(rs.next()){
                     Lehrer.lehrerListe.add(Lehrer.createFromResult(baseContext, rs));
                 }

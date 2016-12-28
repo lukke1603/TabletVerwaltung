@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import leila.tabletverwaltung.DataTypes.Hardware;
@@ -52,19 +52,24 @@ public class GeraeteAdapter extends BaseAdapter {
         TextView tvVerliehen = (TextView)convertView.findViewById(R.id.tvVerliehen);
         TextView tvBeschreibung = (TextView)convertView.findViewById(R.id.tvBeschreibung);
         TextView tvSeriennummer = (TextView)convertView.findViewById(R.id.tvSeriennummer);
+        ImageView ivVerfuegbarkeit = (ImageView)convertView.findViewById(R.id.ivVerfuegbarkeit);
 
         tvSeriennummer.setText(context.getResources().getText(R.string.tvSeriennummer_prefix) + " " + geraet.getmSeriennummer());
         tvBeschreibung.setText(geraet.getmBeschreibung());
 
         String verliehenAn = context.getResources().getText(R.string.geraete_verfuegbar).toString();
+        ivVerfuegbarkeit.setImageDrawable(context.getResources().getDrawable(R.drawable.circle_green));
         if(geraet.getmDatumRueckgabe() == null){
             if(geraet.getmVerliehenAn() instanceof Schueler){
                 verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Schueler) geraet.getmVerliehenAn()).getVorname() + " " + ((Schueler) geraet.getmVerliehenAn()).getName();
+                ivVerfuegbarkeit.setImageDrawable(context.getResources().getDrawable(R.drawable.circle_red));
             }else if(geraet.getmVerliehenAn() instanceof Kurs){
                 verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Kurs) geraet.getmVerliehenAn()).getKursName();
+                ivVerfuegbarkeit.setImageDrawable(context.getResources().getDrawable(R.drawable.circle_red));
             }
         }else{
             verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix).toString();
+            ivVerfuegbarkeit.setImageDrawable(context.getResources().getDrawable(R.drawable.circle_red));
         }
 
 

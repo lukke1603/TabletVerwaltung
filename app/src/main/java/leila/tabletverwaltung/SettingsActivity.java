@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText etBenutzer;
     private EditText etPasswort;
 
-    private static String DEFAULT_URL = "www.ihreDomain.de";
+    public static String DEFAULT_URL = "www.ihreDomain.de";
 
     public static String SP_PREFIX = "tabletverwaltung";
     public static String SP_URL = SP_PREFIX+".url";
@@ -86,7 +85,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void validateChanges() {
-        final Intent upIntent = NavUtils.getParentActivityIntent(this);
 
         if(!this.etBenutzer.getText().toString().equals(this.spOld.get(SP_BENUTZER).toString()) ||
                 !this.etPasswort.getText().toString().equals(this.spOld.get(SP_PASSWORT).toString()) ||
@@ -123,7 +121,7 @@ public class SettingsActivity extends AppCompatActivity {
         spEditor.putString(SP_URL, this.etUrl.getText().toString());
         spEditor.putString(SP_PASSWORT, this.etPasswort.getText().toString());
         spEditor.putString(SP_BENUTZER, this.etBenutzer.getText().toString());
-        spEditor.commit();
+        spEditor.apply();
     }
 
     private void initViews() {

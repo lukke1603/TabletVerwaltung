@@ -35,7 +35,7 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_einlesen"
                 android:layout_marginBottom="40dp"
-                android:contentDescription="Camera Image"
+                android:contentDescription="@string/camera_image"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/main_button" />
 
@@ -50,7 +50,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="85dp"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -71,7 +71,7 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_geraete"
                 android:layout_marginBottom="40dp"
-                android:contentDescription="Camera Image"
+                android:contentDescription="@string/device_image"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/main_button" />
 
@@ -86,7 +86,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="85dp"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -107,7 +107,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="false"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <Spinner
@@ -128,7 +128,7 @@
             android:text="@string/tvKurs"
             android:id="@+id/tvKurs"
             android:textColor="@color/buttonTextColor"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:layout_below="@+id/sLehrer"
             android:layout_alignParentLeft="true"
@@ -152,7 +152,7 @@
             android:checked="false"
             android:textColor="@color/white200"
             android:textStyle="bold"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="20dp"

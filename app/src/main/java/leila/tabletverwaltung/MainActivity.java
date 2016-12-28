@@ -3,12 +3,10 @@ package leila.tabletverwaltung;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,42 +19,27 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import leila.tabletverwaltung.Adapter.KursAdapter;
 import leila.tabletverwaltung.Adapter.LehrerAdapter;
-import leila.tabletverwaltung.DataConnection.DbConnection;
 import leila.tabletverwaltung.DataTypes.Kurs;
 import leila.tabletverwaltung.DataTypes.Lehrer;
 
 public class MainActivity extends AppCompatActivity {
-    private DbConnection dbc;
-
-    private String url;
-    private String benutzer;
-    private String passwort;
-    private Intent nextIntent;
-
-
-
     private Spinner sLehrer;
     private Spinner sKurs;
     private Switch swKlassenweise;
-    private TextView tvKurs;
     private RelativeLayout rlGeraete;
     private RelativeLayout rlEinlesen;
-    private static ArrayList<Lehrer> lehrer = new ArrayList<Lehrer>();
-    private static ArrayList<Kurs> kurse = new ArrayList<Kurs>();
+    private static ArrayList<Lehrer> lehrer = new ArrayList<>();
+    private static ArrayList<Kurs> kurse = new ArrayList<>();
 
     private static int selectedLehrerPos = 0;
     private static int selectedKursPos = 0;
     private static boolean klassenweiseAusgeben = false;
-
-    private SharedPreferences sp;
-    private final static String SP_KLASSENWEISE = SettingsActivity.SP_PREFIX + ".klassenweise";
 
     private boolean isCheckingConnection = false;
     public static final int PERMISSION_REQUEST_CODE_CAMERA = 1;
@@ -74,12 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("ACTIVITY", "Mainactivity");
 
-        this.sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
         flLoading = (RelativeLayout)findViewById(R.id.progress_overlay);
         sLehrer = (Spinner) findViewById(R.id.sLehrer);
         sKurs = (Spinner) findViewById(R.id.spKlasse);
-        tvKurs = (TextView) findViewById(R.id.tvKurs);
         rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
         rlEinlesen = (RelativeLayout) findViewById(R.id.rlEinlesen);
         swKlassenweise = (Switch) findViewById(R.id.swKlassenweise);
@@ -147,28 +127,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    int perm = currentActivity.checkSelfPermission(Manifest.permission.CAMERA);
-                    if (perm != PackageManager.PERMISSION_GRANTED) {
-                        // Permission not granted (need to ask for it).
-                        currentActivity.requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE_CAMERA);
+                final int kursId = kurse.get(sKurs.getSelectedItemPosition()).getKursId();
+
+                final Intent i = new Intent(MainActivity.this, ReaderActivity.class);
+                i.putExtra("klassenweiseAusgeben", klassenweiseAusgeben);
+                i.putExtra("lehrer", lehrer.get(sLehrer.getSelectedItemPosition()).getId());
+                i.putExtra("kurs", kursId);
+
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final int schuelerAnzahl = Kurs.getSchuelerAnzahl(getBaseContext(), kursId);
+                        Log.e("ANZAHL", Integer.toString(schuelerAnzahl));
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!klassenweiseAusgeben && schuelerAnzahl == 0){
+                                    Toast.makeText(getApplicationContext(),R.string.alertReaderkeineSchuelerInKlasse, Toast.LENGTH_LONG).show();
+                                }else{
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        int perm = currentActivity.checkSelfPermission(Manifest.permission.CAMERA);
+                                        if (perm != PackageManager.PERMISSION_GRANTED) {
+                                            // Permission not granted (need to ask for it).
+                                            currentActivity.requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE_CAMERA);
+                                        }else {
+                                            // Permission granted (user already accepted).
+                                            startActivity(i);
+                                        }
+                                    } else {
+                                        // Permission granted (because no runtime permission).
+                                        startActivity(i);
+                                    }
+                                }
+                            }
+                        });
                     }
-                    else {
-                        // Permission granted (user already accepted).
-                        Intent i = new Intent(MainActivity.this, ReaderActivity.class);
-                        i.putExtra("klassenweiseAusgeben", klassenweiseAusgeben);
-                        i.putExtra("lehrer", lehrer.get(sLehrer.getSelectedItemPosition()).getId());
-                        i.putExtra("kurs", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
-                        startActivity(i);
-                    }
-                } else {
-                    // Permission granted (because no runtime permission).
-                    Intent i = new Intent(MainActivity.this, ReaderActivity.class);
-                    i.putExtra("klassenweiseAusgeben", klassenweiseAusgeben);
-                    i.putExtra("lehrer", lehrer.get(sLehrer.getSelectedItemPosition()).getId());
-                    i.putExtra("kurs", kurse.get(sKurs.getSelectedItemPosition()).getKursId());
-                    startActivity(i);
-                }
+                }).start();
             }
         });
 
@@ -181,16 +177,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initSpinner();
-    }
-
-    private void setVisibilityOfKursSpinner() {
-        if(MainActivity.klassenweiseAusgeben){
-            sKurs.setVisibility(View.VISIBLE);
-            tvKurs.setVisibility(View.VISIBLE);
-        }else{
-            sKurs.setVisibility(View.GONE);
-            tvKurs.setVisibility(View.GONE);
-        }
     }
 
 

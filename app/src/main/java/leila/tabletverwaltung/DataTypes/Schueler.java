@@ -64,7 +64,7 @@ public class Schueler extends Person {
     }
 
     public static ArrayList<Schueler> getAllFromKurs(Context baseContext, int kursId) {
-        ArrayList<Schueler> schueler = new ArrayList<Schueler>();
+        ArrayList<Schueler> schueler = new ArrayList<>();
 
         DbConnection dbc = DbConnection.connect(baseContext);
         String query = baseContext.getResources().getString(R.string.query_Schueler_getAllFromKurs);

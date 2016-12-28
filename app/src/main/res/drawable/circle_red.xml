@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid
+        android:color="@color/geraet_verliehen_an"/>
+
+    <size
+        android:width="50dp"
+        android:height="50dp"/>
+    <stroke
+        android:color="@color/white200"
+        android:width="10dp"/>
+
+    <size
+        android:width="120dp"
+        android:height="120dp"/>
+</shape>

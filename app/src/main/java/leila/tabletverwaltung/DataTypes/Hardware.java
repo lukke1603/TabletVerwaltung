@@ -1,7 +1,6 @@
 package leila.tabletverwaltung.DataTypes;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,7 +41,7 @@ public class Hardware extends DataType {
             ResultSet rs = dbc.Select(query);
 
             try {
-                Hardware.geraeteListe = new ArrayList<Hardware>();
+                Hardware.geraeteListe = new ArrayList<>();
                 if(rs != null){
                     while(rs.next()){
                         Hardware.geraeteListe.add(Hardware.createFromResult(baseContext, rs));
@@ -132,11 +131,7 @@ public class Hardware extends DataType {
     }
 
     public boolean isVerliehen(){
-        if(mVerliehenAn != null){
-            return true;
-        }else{
-            return false;
-        }
+        return mVerliehenAn != null;
     }
 
 

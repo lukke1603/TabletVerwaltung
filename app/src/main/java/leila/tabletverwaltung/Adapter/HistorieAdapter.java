@@ -1,14 +1,12 @@
 package leila.tabletverwaltung.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import leila.tabletverwaltung.DataTypes.Historie;
-import leila.tabletverwaltung.DataTypes.Kurs;
-import leila.tabletverwaltung.DataTypes.Schueler;
 import leila.tabletverwaltung.R;
 
 /**
@@ -56,7 +52,6 @@ public class HistorieAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_historie,parent, false);
         }
 
-        TextView tvBis = (TextView)convertView.findViewById(R.id.tvBis);
         TextView tvVerliehenAn = (TextView)convertView.findViewById(R.id.tvVerliehenAn);
         TextView tvVerliehenDurch = (TextView)convertView.findViewById(R.id.tvVerliehenDurch);
         TextView tvDatumRueckgabe = (TextView)convertView.findViewById(R.id.tvDatumRueckgabe);
@@ -79,9 +74,9 @@ public class HistorieAdapter extends BaseAdapter {
 
         String verliehenAn = context.getResources().getText(R.string.geraete_verfuegbar).toString();
         if(historie.getmVerliehenAn() != null){
-            verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Schueler) historie.getmVerliehenAn()).getVorname() + " " + ((Schueler) historie.getmVerliehenAn()).getName();
+            verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + historie.getmVerliehenAn().getVorname() + " " + historie.getmVerliehenAn().getName();
         }else if(historie.getmKurs() != null){
-            verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + ((Kurs) historie.getmKurs()).getKursName();
+            verliehenAn = context.getResources().getText(R.string.tvVerliehen_prefix) + " " + historie.getmKurs().getKursName();
         }
 
         tvVerliehenAn.setText(verliehenAn);

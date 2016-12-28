@@ -16,4 +16,7 @@
     <color name="loadingSpinnerStart">@color/white200</color>
     <color name="loadingSpinnerStop">#00ffffff</color>
 
+    <color name="geraet_verfuegbar">#18ca00</color>
+    <color name="geraet_verliehen_an">#d80004</color>
+
 </resources>

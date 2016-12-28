@@ -37,7 +37,7 @@ public class Kurs extends DataType {
             ResultSet rs = dbc.Select(query);
 
             try {
-                Kurs.kursListe = new ArrayList<Kurs>();
+                Kurs.kursListe = new ArrayList<>();
                 while(rs.next()){
                     Kurs.kursListe.add(Kurs.createFromResult(baseContext, rs));
                 }
@@ -72,6 +72,26 @@ public class Kurs extends DataType {
 //        dbc.disconnect();
         return kurs;
     }
+
+
+    public static int getSchuelerAnzahl(Context baseContext, int kursId){
+        DbConnection dbc = DbConnection.connect(baseContext);
+
+        String query = baseContext.getResources().getString(R.string.query_Kurs_getSchuelerAnzahl).replace("%sch_kla_id%", Integer.toString(kursId));
+        ResultSet rs = dbc.Select(query);
+
+        int anzahl = 0;
+        try {
+            if(rs.first()){
+                anzahl = rs.getInt("anzahl");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return anzahl;
+    }
+
 
     private static Kurs createFromResult(Context baseContext, ResultSet rs) {
         Kurs kurs = null;

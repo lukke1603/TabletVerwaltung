@@ -1,6 +1,5 @@
 package leila.tabletverwaltung;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,14 +11,12 @@ import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -42,7 +39,6 @@ import leila.tabletverwaltung.Adapter.SchuelerAdapter;
 import leila.tabletverwaltung.DataTypes.Hardware;
 import leila.tabletverwaltung.DataTypes.Historie;
 import leila.tabletverwaltung.DataTypes.Kurs;
-import leila.tabletverwaltung.DataTypes.Lehrer;
 import leila.tabletverwaltung.DataTypes.Schueler;
 
 
@@ -51,7 +47,6 @@ public class ReaderActivity extends AppCompatActivity {
     private TextView tvBarcodeResult;
     private SurfaceView cameraView;
     private CameraSource cameraSource;
-    private BarcodeDetector barcodeDetector;
     private RelativeLayout flLoading;
 
 
@@ -62,7 +57,7 @@ public class ReaderActivity extends AppCompatActivity {
     private int lehrerId;
     private boolean klassenWeise;
 
-    private ArrayList<Schueler> schueler = new ArrayList<Schueler>();
+    private ArrayList<Schueler> schueler = new ArrayList<>();
 
 
     private static boolean barcodeDetected = false;
@@ -241,6 +236,9 @@ public class ReaderActivity extends AppCompatActivity {
                                                     Log.i("KURS", Integer.toString(kursId));
                                                     verleiheAnKlasse(geraet, kursId, lehrerId);
                                                 }else{
+
+
+
                                                     new Thread(new Runnable() {
                                                         @Override
                                                         public void run() {
@@ -344,6 +342,7 @@ public class ReaderActivity extends AppCompatActivity {
                                         }
                                     }).start();
                                 }else{
+
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -440,7 +439,6 @@ public class ReaderActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Kurs kurs = Kurs.get(getBaseContext(), kursId);
                 Historie.setVerliehenAnKurs(getBaseContext(),kursId,lehrerId,geraet.getmId());
 
                 runOnUiThread(new Runnable() {
@@ -479,7 +477,7 @@ public class ReaderActivity extends AppCompatActivity {
 
     private void initSurfaceView() {
         try {
-            barcodeDetector = new BarcodeDetector.Builder(ReaderActivity.this).setBarcodeFormats(
+            BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(ReaderActivity.this).setBarcodeFormats(
                     Barcode.QR_CODE | Barcode.DATA_MATRIX | Barcode.EAN_8 | Barcode.EAN_13 | Barcode.UPC_A | Barcode.UPC_E | Barcode.CODE_128 | Barcode.ITF | Barcode.CODE_39
             ).build();
 

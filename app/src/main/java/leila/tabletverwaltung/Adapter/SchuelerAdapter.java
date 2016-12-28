@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import leila.tabletverwaltung.DataTypes.Lehrer;
 import leila.tabletverwaltung.DataTypes.Schueler;
 import leila.tabletverwaltung.R;
 

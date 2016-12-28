@@ -2,17 +2,12 @@ package leila.tabletverwaltung;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import leila.tabletverwaltung.DataConnection.DbConnection;
-import leila.tabletverwaltung.DataTypes.Hardware;
-import leila.tabletverwaltung.DataTypes.Lehrer;
 
 /**
  * Created by Lukas Brinkmann on 30.11.2016.
@@ -61,13 +56,11 @@ public class Utility {
                     }catch (Exception e){
                         e.printStackTrace();
                     }finally {
-                        if(con != null){
-//                            con.disconnect();
-                        }
+
                     }
                 }
 
-                Runnable callback = null;
+                Runnable callback;
                 if(isValid){    //  Falls eine Verbindung hergestellt werden konnte
                     callback = ifExists;
                 }else{          //  Falls die Verbindung nicht hergestellt werden konnte
@@ -81,13 +74,6 @@ public class Utility {
 
 
     public static void initApplicationData(Context baseContext){
-//        if(Lehrer.lehrerListe == null){
-//            Lehrer.getAll(baseContext);
-//        }
-//
-//        if(Hardware.geraeteListe == null){
-//            Hardware.getAll(baseContext);
-//        }
     }
 
 
