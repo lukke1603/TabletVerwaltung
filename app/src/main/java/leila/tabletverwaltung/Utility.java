@@ -49,7 +49,6 @@ public class Utility {
                     DbConnection con = null;
                     try {
                         con = DbConnection.connect(baseContext, true);
-                        Log.i("BOOLEAN", ""+con.isValid());
                         if(con.isValid()){
                             isValid = true;
                         }

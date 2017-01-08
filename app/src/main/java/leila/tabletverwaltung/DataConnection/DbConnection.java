@@ -115,7 +115,6 @@ public class DbConnection {
         try{
             ResultSet rs = Select("SELECT 1 as `valid`");
             rs.first();
-            Log.i("RESULT", rs.getString("valid"));
             if(rs.getInt("valid") == 1 && valid){
                 result = true;
             }
@@ -142,13 +141,11 @@ public class DbConnection {
         try{
             DriverManager.setLoginTimeout(5);
             if(mConnection == null || reConnect){
-                Log.i("RECONNECT", "processing");
                 mConnection = (Connection) DriverManager.getConnection
                         (domain,user,password);
                 valid = true;
             }
         }catch (SQLException e){
-            Log.e("SQL",e.getMessage());
         }
 
         DbConnection.valid = valid;

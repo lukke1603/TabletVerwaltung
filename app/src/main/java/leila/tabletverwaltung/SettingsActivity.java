@@ -44,7 +44,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Log.i("ACTIVITY", "SettingsActivity");
 
         flLoading = (RelativeLayout) findViewById(R.id.progress_overlay);
 

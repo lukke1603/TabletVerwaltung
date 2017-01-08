@@ -30,7 +30,13 @@ public class Hardware extends DataType {
     }
     //TODO: implement hardware
 
-
+    /**
+     * Holt alle Hardware Einträge aus der Datenbank
+     *
+     * @param baseContext
+     * @param update
+     * @return
+     */
     public static ArrayList<Hardware> getAll(Context baseContext, boolean update){
         Long currentTs = System.currentTimeMillis() / (1000 * 1000);
         int dayInSeconds = 60 * 60 * 24;
@@ -60,7 +66,13 @@ public class Hardware extends DataType {
     }
 
 
-
+    /**
+     * Holt anhand der ID einen einzelnen Eintrag aus der Datenbank
+     *
+     * @param baseContext
+     * @param id
+     * @return
+     */
     public static Hardware get(Context baseContext, int id){
         DbConnection dbc = DbConnection.connect(baseContext);
 
@@ -76,11 +88,17 @@ public class Hardware extends DataType {
             e.printStackTrace();
         }
 
-//        dbc.disconnect();
         return geraet;
     }
 
 
+    /**
+     * Holt sich anhand des Barcodes einen Eintrag aus der Datenbank
+     *
+     * @param baseContext
+     * @param barcode
+     * @return
+     */
     public static Hardware getFromBarcode(Context baseContext, String barcode) {
         DbConnection dbc = DbConnection.connect(baseContext);
 
@@ -100,9 +118,13 @@ public class Hardware extends DataType {
     }
 
 
-
-
-
+    /**
+     * erstellt anhand eines Resultsets ein Hardware-Objekt
+     *
+     * @param baseContext
+     * @param rs
+     * @return
+     */
     public static Hardware createFromResult(Context baseContext, ResultSet rs){
         Hardware geraet = new Hardware(baseContext);
         try {
@@ -113,8 +135,6 @@ public class Hardware extends DataType {
             geraet.setmDatumRueckgabe(rs.getTimestamp("his_datum_rueckgabe"));
             geraet.setmBarcode(rs.getString("har_barcode"));
             Object verliehenAn = null;
-
-//            Log.i("verliehen", rs.getString("his_verliehen_an"));
 
             if(rs.getInt("his_verliehen_an") != 0){       //  Ausgeliehen an einen Schüler
                 verliehenAn = Schueler.get(baseContext, rs.getInt("his_verliehen_an"));

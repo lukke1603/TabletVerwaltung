@@ -42,6 +42,14 @@ public class Historie extends DataType {
     }
 
 
+    /**
+     * Holt anhand der GeräteID die letzten 30 Einträge der Historie aus der Datenbank
+     *
+     * @param baseContext
+     * @param hardwareId
+     * @param update
+     * @return
+     */
     public static ArrayList<Historie> getAll(Context baseContext, int hardwareId, boolean update){
         Long currentTs = System.currentTimeMillis() / (1000 * 1000);
         int dayInSeconds = 60 * 60 * 24;
@@ -62,7 +70,6 @@ public class Historie extends DataType {
                 e.printStackTrace();
             }
 
-//            dbc.disconnect();
             return Historie.eintraege;
         }else{
             return Historie.eintraege;
@@ -70,7 +77,13 @@ public class Historie extends DataType {
     }
 
 
-
+    /**
+     * Holt alle Einträge der Historie aus der Datenbank
+     *
+     * @param baseContext
+     * @param update
+     * @return
+     */
     public static ArrayList<Historie> getAll(Context baseContext, boolean update){
         Long currentTs = System.currentTimeMillis() / (1000 * 1000);
         int dayInSeconds = 60 * 60 * 24;
@@ -98,6 +111,13 @@ public class Historie extends DataType {
     }
 
 
+    /**
+     * Erstellt anhand des Resultsets eine Historie-Objekt
+     *
+     * @param baseContext
+     * @param rs
+     * @return
+     */
     public static Historie createFromResult(Context baseContext, ResultSet rs){
         Historie eintrag = null;
         try {
@@ -105,10 +125,6 @@ public class Historie extends DataType {
             Lehrer lehrer = Lehrer.get(baseContext, rs.getInt("his_verliehen_durch"));
             Schueler schueler = Schueler.get(baseContext, rs.getInt("his_verliehen_an"));
             Kurs kurs = Kurs.get(baseContext, rs.getInt("his_kurs"));
-
-
-            Log.i("TS", rs.getString("his_datum_verleih"));
-
 
             Timestamp ts_verleih = rs.getTimestamp("his_datum_verleih");
             Timestamp ts_rueckgabe = rs.getTimestamp("his_datum_rueckgabe");
@@ -131,6 +147,12 @@ public class Historie extends DataType {
     }
 
 
+    /**
+     * Setzt die entsprechenden Spalten in der Datenbank, um ein Gerät zurückzugeben
+     *
+     * @param baseContext
+     * @param hardware
+     */
     public static void geraetZurueckgeben(Context baseContext, int hardware){
         DbConnection dbc = DbConnection.connect(baseContext);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -139,11 +161,18 @@ public class Historie extends DataType {
         String queryUpdate = baseContext.getResources().getString(R.string.query_Historie_rueckgabe);
         queryUpdate = queryUpdate.replace("%his_datum_rueckgabe%", format.format(datumRueckgabe))
                 .replace("%his_hardware%", Integer.toString(hardware));
-        Log.i("QUERY", queryUpdate);
         dbc.Update(queryUpdate);
     }
 
 
+    /**
+     * Setzt das Gerät in der Datenbank auf Verliehen an Schüler
+     *
+     * @param baseContext
+     * @param schueler
+     * @param lehrer
+     * @param hardware
+     */
     public static void setVerliehenAnSchueler(Context baseContext, int schueler, int lehrer, int hardware) {
         geraetZurueckgeben(baseContext, hardware);
 
@@ -161,6 +190,14 @@ public class Historie extends DataType {
     }
 
 
+    /**
+     * Setzt das Gerät in der Datenbank auf verliehen an Kurs
+     *
+     * @param baseContext
+     * @param kurs
+     * @param lehrer
+     * @param hardware
+     */
     public static void setVerliehenAnKurs(Context baseContext, int kurs, int lehrer, int hardware){
         geraetZurueckgeben(baseContext, hardware);
 

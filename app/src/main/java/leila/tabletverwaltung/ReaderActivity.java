@@ -84,7 +84,6 @@ public class ReaderActivity extends AppCompatActivity {
         klassenWeise = parseIntent.getBooleanExtra("klassenweiseAusgeben", false);
 
 
-        Log.e("READER", "CREATE");
 
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -108,7 +107,6 @@ public class ReaderActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        Log.e("READER", "START");
 
         new Thread(new Runnable() {
             @Override
@@ -142,7 +140,6 @@ public class ReaderActivity extends AppCompatActivity {
                 Uri.parse("android-app://leila.tabletverwaltung/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
-        Log.e("READER", "PAUSE");
         client.disconnect();
         cameraSource.stop();
 
@@ -158,7 +155,6 @@ public class ReaderActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("READER", "RESUME");
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
@@ -200,13 +196,11 @@ public class ReaderActivity extends AppCompatActivity {
 
 
     private void initCamera() {
-        Log.i("STATE", "initCamera");
         cameraView.getHolder().addCallback(getHolderCallback());
 
     }
 
     private void validateBarcode(final String barcode){
-        Log.i("BARCODE", barcode);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -216,10 +210,7 @@ public class ReaderActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(geraet != null){
-                            Log.i("GERAET", "here");
-                            Log.i("VERLIEHEN", (geraet.isVerliehen()) ? "true" : "false");
                             if(geraet.isVerliehen()){       //  Gerät ist bereits verliehen
-                                Log.i("GERAET VERLIEHEN", "here");
                                 dialog = new AlertDialog.Builder(ReaderActivity.this, R.style.AlertDialog)
                                         .setTitle(R.string.alertReaderBereitsVerliehenTitle)
                                         .setMessage(R.string.alertReaderBereitsVerliehenMessage)
@@ -233,7 +224,6 @@ public class ReaderActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 if(klassenWeise){
-                                                    Log.i("KURS", Integer.toString(kursId));
                                                     verleiheAnKlasse(geraet, kursId, lehrerId);
                                                 }else{
 
@@ -295,11 +285,7 @@ public class ReaderActivity extends AppCompatActivity {
                                         .setIcon(android.R.drawable.ic_dialog_alert)
                                         .show();
                             }else{
-                                Log.i("GERAET VERFÜGBAR", "here");
-
                                 if(klassenWeise){       //  Gerät wird an Klasse ausgegeben
-
-                                    Log.i("KURS", Integer.toString(kursId));
 
                                     new Thread(new Runnable() {
                                         @Override
@@ -457,14 +443,12 @@ public class ReaderActivity extends AppCompatActivity {
         return new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                Log.i("STATE", "SurfaceCreated");
                 initSurfaceView();
                 surfaceCreated = true;
             }
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                Log.i("CHANGED SURFACE", "here");
             }
 
             @Override
@@ -481,8 +465,9 @@ public class ReaderActivity extends AppCompatActivity {
                     Barcode.QR_CODE | Barcode.DATA_MATRIX | Barcode.EAN_8 | Barcode.EAN_13 | Barcode.UPC_A | Barcode.UPC_E | Barcode.CODE_128 | Barcode.ITF | Barcode.CODE_39
             ).build();
 
-            Log.i("HEIGHT", Integer.toString(cameraView.getHeight()));
-            cameraSource = new CameraSource.Builder(ReaderActivity.this, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(cameraView.getWidth(), (cameraView.getHeight() / 2)).build();
+
+
+            cameraSource = new CameraSource.Builder(ReaderActivity.this, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(200,200).build();
 
             barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
                 @Override

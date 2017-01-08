@@ -38,16 +38,19 @@ public class HistorieActivity extends AppCompatActivity {
 
         progress_overlay.setVisibility(View.VISIBLE);
 
+        /**
+         * Startet einen neuen Thread
+         *
+         * holt alle Eintrage der Historie für ein Gerät und listet sie in der ListView
+         */
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i("GeraeteID", Integer.toString(geraeteId));
                 eintraege = Historie.getAll(getBaseContext(), geraeteId, true);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.i("eintraege", eintraege.toString());
                         HistorieAdapter hAdapter = new HistorieAdapter(getApplicationContext(), eintraege);
                         lvHistorie.setAdapter(hAdapter);
 

@@ -29,6 +29,10 @@ public class GeraeteActivity extends AppCompatActivity {
         flLoading = (RelativeLayout)findViewById(R.id.progress_overlay);
         flLoading.setVisibility(View.VISIBLE);
 
+        /**
+         * Click-Listener für einenen Eintrag
+         * Startet neue Activity
+         */
         lvGeraete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -38,8 +42,6 @@ public class GeraeteActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-
     }
 
 
@@ -48,6 +50,12 @@ public class GeraeteActivity extends AppCompatActivity {
         super.onResume();
 
         flLoading.setVisibility(View.VISIBLE);
+
+        /**
+         * Startet einen neuen Thread
+         *
+         * holt alle Geräte und zeigt sie in der ListView an
+         */
         new Thread(new Runnable() {
             @Override
             public void run() {

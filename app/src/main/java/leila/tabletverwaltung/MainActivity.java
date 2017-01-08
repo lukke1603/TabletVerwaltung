@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -55,17 +56,12 @@ public class MainActivity extends AppCompatActivity {
 
         Utility.initApplicationData(getApplicationContext());
 
-        Log.i("ACTIVITY", "Mainactivity");
-
         flLoading = (RelativeLayout)findViewById(R.id.progress_overlay);
         sLehrer = (Spinner) findViewById(R.id.sLehrer);
         sKurs = (Spinner) findViewById(R.id.spKlasse);
         rlGeraete = (RelativeLayout) findViewById(R.id.rlGeraete);
         rlEinlesen = (RelativeLayout) findViewById(R.id.rlEinlesen);
         swKlassenweise = (Switch) findViewById(R.id.swKlassenweise);
-
-        Log.i("LOADING", "here");
-        Log.i("LOADING", flLoading.toString());
 
     }
 
@@ -103,12 +99,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * setzt den Switch aktiv oder inaktiv
+     */
     private void initKlassenweiseAusgeben() {
         swKlassenweise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 klassenweiseAusgeben = isChecked;
-                Log.i("CHANGE", (klassenweiseAusgeben) ? "true" : "false");
             }
         });
 
@@ -116,11 +115,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * setzt die OnClickListener für die beiden Buttons
+     */
     private void createMainActivity(){
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-
 
         final Activity currentActivity = this;
         rlEinlesen.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         final int schuelerAnzahl = Kurs.getSchuelerAnzahl(getBaseContext(), kursId);
-                        Log.e("ANZAHL", Integer.toString(schuelerAnzahl));
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -181,6 +179,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    /**
+     * erstellt das OptionsMenu
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -189,6 +190,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    /**
+     * OnClickListener für ein Item aus dem OptionsMenu
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (isCheckingConnection) return false;
@@ -203,6 +207,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Holt sich alle Lehrer und Kurse und initialisiert die Spinner
+     */
     private void initSpinner(){
         //  Färbt das Dreieck des Spinners weis
         sLehrer.getBackground().setColorFilter(getResources().getColor(R.color.white200), PorterDuff.Mode.SRC_ATOP);

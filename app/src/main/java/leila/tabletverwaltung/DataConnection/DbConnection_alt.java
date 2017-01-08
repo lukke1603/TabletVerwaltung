@@ -135,13 +135,11 @@ public class DbConnection_alt {
             mConnection = (Connection) DriverManager.getConnection
                     (mUrl,mUserName,mPassWord);
         }catch (SQLException e){
-            Log.e("SQL",e.getMessage());
         }
     }
 
 
     private void Log(Exception e){
-        Log.e("SQLException", e.getMessage());
     }
 
     public Connection getmConnection() {
