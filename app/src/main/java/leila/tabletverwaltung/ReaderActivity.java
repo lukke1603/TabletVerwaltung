@@ -372,6 +372,7 @@ public class ReaderActivity extends AppCompatActivity {
                                 }
                             }
                         }else{
+                            Toast.makeText(getApplicationContext(), R.string.geraet_nicht_vorhanden, Toast.LENGTH_LONG).show();
                             onResume();
                         }
                     }
@@ -461,7 +462,15 @@ public class ReaderActivity extends AppCompatActivity {
     private void initSurfaceView() {
         try {
             BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(ReaderActivity.this).setBarcodeFormats(
-                    Barcode.QR_CODE | Barcode.DATA_MATRIX | Barcode.EAN_8 | Barcode.EAN_13 | Barcode.UPC_A | Barcode.UPC_E | Barcode.CODE_128 | Barcode.ITF | Barcode.CODE_39
+//                    Barcode.QR_CODE
+//                    | Barcode.DATA_MATRIX
+                    Barcode.EAN_8
+//                    | Barcode.EAN_13
+//                    | Barcode.UPC_A
+//                    | Barcode.UPC_E
+//                    | Barcode.CODE_128
+//                    | Barcode.ITF
+//                    | Barcode.CODE_39
             ).build();
 
 

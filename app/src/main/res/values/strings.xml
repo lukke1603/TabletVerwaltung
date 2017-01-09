@@ -56,6 +56,7 @@
     <string name="camera_image">Camera Image</string>
     <string name="device_image">Camera Image</string>
     <string name="border_box">Border Box</string>
+    <string name="geraet_nicht_vorhanden">Das gescannte Gerät ist nicht in der Datenbank registriert. Wenden Sie sich an einen Administrator</string>
 
 
 </resources>
