@@ -11,7 +11,6 @@ import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -467,7 +466,7 @@ public class ReaderActivity extends AppCompatActivity {
 
 
 
-            cameraSource = new CameraSource.Builder(ReaderActivity.this, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(200,200).build();
+            cameraSource = new CameraSource.Builder(ReaderActivity.this, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(cameraView.getWidth(), cameraView.getHeight()).build();
 
             barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
                 @Override
