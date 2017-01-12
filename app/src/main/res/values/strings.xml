@@ -7,6 +7,7 @@
     <string name="tvLehrer">Lehrkraft</string>
     <string name="tvKurs">Kurs</string>
     <string name="tvEinstellungenSpeichern">Speichern</string>
+    <string name="tvEinstellungenDescription">Hier können Sie die notwendigen Datenbankinformationen hinterlegen. Falls keine Verbindung zur Datenbank hergestellt werden kann, ist das Nutzen der App unmöglich.</string>
     <string name="alertEinstellungenSpeichernTitle">Änderungen speichern?</string>
     <string name="alertEinstellungenSpeichernMessage">Möchten Sie Ihre Änderungen speichern?</string>
     <string name="alertEinstellungenSpeichernNegativeButton">Nein</string>
@@ -14,6 +15,8 @@
     <string name="etUrl">Url zur Datenbank</string>
     <string name="etBenutzer">Benutzer</string>
     <string name="etPasswort">Passwort</string>
+
+
 
     <string name="tvKlassenweise">Kursweise ausgeben</string>
 

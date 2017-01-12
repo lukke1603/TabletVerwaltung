@@ -76,7 +76,7 @@ public class Schueler extends Person {
                 Schueler eintrag = Schueler.createFromResult(baseContext, rs);
                 schueler.add(eintrag);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

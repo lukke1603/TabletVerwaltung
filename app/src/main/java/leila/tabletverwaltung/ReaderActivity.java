@@ -1,5 +1,6 @@
 package leila.tabletverwaltung;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -115,7 +116,7 @@ public class ReaderActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        flLoading.setVisibility(View.GONE);
+
                         if(surfaceCreated) initSurfaceView();
                     }
                 });
@@ -155,14 +156,29 @@ public class ReaderActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        flLoading.setVisibility(View.VISIBLE);
 
-        barcodeDetected = false;
+        final Context context = this;
+        Utility.checkDbConnection(getBaseContext(), this, new Runnable() {
+            @Override
+            public void run() {
+                client = new GoogleApiClient.Builder(context).addApi(AppIndex.API).build();
 
-        tvBarcodeResult.setText("");
-        ivBorder.setImageResource(R.drawable.barcode_border_box_white);
+                barcodeDetected = false;
 
+                tvBarcodeResult.setText("");
+                ivBorder.setImageResource(R.drawable.barcode_border_box_white);
 
+                flLoading.setVisibility(View.GONE);
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
     }
 
 

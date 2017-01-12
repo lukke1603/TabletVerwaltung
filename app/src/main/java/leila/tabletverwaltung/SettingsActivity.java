@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -128,9 +129,12 @@ public class SettingsActivity extends AppCompatActivity {
         this.etBenutzer = (EditText)findViewById(R.id.etBenutzer);
         this.etPasswort = (EditText)findViewById(R.id.etPasswort);
 
+
         this.etUrl.setText(this.sp.getString(SP_URL, DEFAULT_URL));
         this.etBenutzer.setText(this.sp.getString(SP_BENUTZER, null));
         this.etPasswort.setText(this.sp.getString(SP_PASSWORT, null));
+
+
     }
 
 
