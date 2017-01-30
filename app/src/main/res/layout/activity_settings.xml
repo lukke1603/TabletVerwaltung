@@ -46,7 +46,8 @@
                 android:hint="@string/etUrl"
                 android:inputType="textUri"
                 android:textSize="20sp"
-                android:textIsSelectable="false" />
+                android:textIsSelectable="false"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -65,7 +66,9 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginStart="0dp"
                 android:textSize="20sp"
-                android:hint="@string/etBenutzer" />
+                android:inputType="text"
+                android:hint="@string/etBenutzer"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -85,7 +88,8 @@
                 android:layout_marginStart="0dp"
                 android:textSize="20sp"
                 android:hint="@string/etPasswort"
-                android:inputType="textVisiblePassword" />
+                android:inputType="textVisiblePassword"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
 

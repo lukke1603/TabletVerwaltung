@@ -70,7 +70,47 @@
     </string>
 
 
-
+    <string name="query_Hardware_getFromBarcode" formatted="false">
+        SELECT
+            `hardware`.`har_id`,
+            `hardware`.`har_seriennummer`,
+            `hardware`.`har_barcode`,
+            `hardware`.`har_beschreibung`,
+            `hardware`.`har_bemerkung`,
+            (
+                SELECT
+                    `historie`.`his_verliehen_an`
+                FROM
+                    `historie`
+                WHERE
+                    `historie`.`his_datum_rueckgabe` is NULL AND
+                    `historie`.`his_hardware` = `hardware`.`har_id`
+            ) as `his_verliehen_an`,
+            (
+                SELECT
+                    `historie`.`his_kurs`
+                FROM
+                    `historie`
+                WHERE
+                    `historie`.`his_datum_rueckgabe` is NULL AND
+                    `historie`.`his_hardware` = `hardware`.`har_id`
+            ) as `his_kurs`,
+            (
+                SELECT
+                    `historie`.`his_datum_rueckgabe`
+                FROM
+                    `historie`
+                WHERE
+                    `historie`.`his_datum_rueckgabe` is NULL AND
+                    `historie`.`his_hardware` = `hardware`.`har_id`
+            ) as `his_datum_rueckgabe`
+        FROM
+            `hardware`
+        WHERE
+            `hardware`.`har_id` = \'%har_id%\'
+        ORDER BY
+            `hardware`.`har_seriennummer`
+    </string>
 
     <string formatted="false" name="query_Hardware_getFromSeriennummer">
         SELECT

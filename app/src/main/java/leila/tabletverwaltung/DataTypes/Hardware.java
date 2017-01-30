@@ -102,7 +102,11 @@ public class Hardware extends DataType {
     public static Hardware getFromBarcode(Context baseContext, String barcode) {
         DbConnection dbc = DbConnection.connect(baseContext);
 
-        String query = baseContext.getResources().getString(R.string.query_Hardware_getFromSeriennummer).replace("%har_barcode%", barcode);
+        String id = barcode.substring(0, barcode.length() - 1);
+        id = id.replaceFirst("^0+(?!$)", "");
+
+//        String query = baseContext.getResources().getString(R.string.query_Hardware_getFromSeriennummer).replace("%har_barcode%", barcode);
+        String query = baseContext.getResources().getString(R.string.query_Hardware_getFromBarcode).replace("%har_id%", id);
         ResultSet rs = dbc.Select(query);
 
         Hardware geraet = null;
